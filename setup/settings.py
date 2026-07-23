@@ -115,12 +115,18 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
 STATIC_URL = 'static/'
+
+# Pasta onde os arquivos estáticos ficam no seu código local
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'core/static'),
 ]
+
+# Pasta onde o Django junta tudo para produção (Render)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Suporte para arquivos estáticos em produção com WhiteNoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (Uploads de imagens dos produtos)
 MEDIA_URL = '/media/'
