@@ -4,158 +4,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Life | Perfumes Importados</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <title>Royal Life - Sua Essência, Sua Escolha, Seu Estilo</title>
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #080808;
-            color: #e5e5e5;
+        /* Estilos Globais e do Cabeçalho */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
-        .font-serif-luxury {
-            font-family: 'Cinzel', serif;
+        body {
+            background-color: #000;
+            color: #fff;
         }
-        /* Cor Dourada Premium */
-        .text-gold {
+
+        .navbar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #000;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 26px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .menu-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #d4af37;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .header-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            transition: color 0.3s;
+        }
+
+        .header-nav a:hover {
             color: #d4af37;
         }
 
-        .bg-gold {
+        /* Menu Lateral (Leque) */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background-color: #0b0b0b;
+            border-right: 1px solid #222;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            transition: left 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-menu.active {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #222;
+        }
+
+        .sidebar-header h3 {
+            color: #d4af37;
+            font-family: serif;
+            letter-spacing: 1px;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .sidebar-content {
+            padding: 15px 0;
+            overflow-y: auto;
+        }
+
+        .accordion-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #141414;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .accordion-btn:hover {
+            background: #141414;
+            color: #d4af37;
+        }
+
+        .accordion-btn .arrow {
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+
+        .accordion-btn.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #050505;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-content a {
+            display: block;
+            padding: 12px 35px;
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 13px;
+            border-bottom: 1px solid #111;
+            transition: color 0.2s;
+        }
+
+        .accordion-content a:hover {
+            color: #d4af37;
+        }
+
+        /* Seção Hero */
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px;
+            background-color: #000;
+        }
+
+        .logo-central {
+            width: 140px;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            color: #d4af37;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            font-family: serif;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: #ccc;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .catalog-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .catalog-btn:hover {
             background-color: #d4af37;
+            color: #000;
         }
 
-        .border-gold {
-            border-color: #d4af37;
+        /* Seção Cards */
+        .info-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 60px 40px;
+            flex-wrap: wrap;
         }
 
-        .border-gold-dark {
-            border-color: rgba(212, 175, 55, 0.3);
+        .card {
+            background-color: #050505;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            color: #d4af37;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-family: serif;
+        }
+
+        .card-text {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-list {
+            list-style: none;
+            text-align: left;
+            font-size: 13px;
+            color: #aaa;
+            line-height: 2;
+        }
+
+        .card-highlight {
+            color: #d4af37;
+            font-size: 12px;
+            font-style: italic;
         }
     </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
-    <header class="border-b border-gold-dark bg-black/90 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <img src="{% static 'core/img/logo.png' %}" alt="Royal Life" class="h-14 w-auto rounded-full border border-gold">
-                <span class="font-serif-luxury text-xl font-bold tracking-widest text-gold hidden sm:inline">ROYAL LIFE</span>
-            </div>
-
-            <nav class="space-x-8 text-xs font-semibold tracking-widest uppercase text-gray-300">
-                <a href="#sobre" class="hover:text-gold transition">A Marca</a>
-                <a href="#catalogo" class="hover:text-gold transition">Coleção</a>
-                <a href="#" class="hover:text-gold transition">Contato</a>
-            </nav>
-        </div>
-    </header>
-
-    <section class="relative py-20 px-6 text-center border-b border-gold-dark bg-gradient-to-b from-black via-zinc-950 to-black">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
-            <img src="{% static 'core/img/logo.png' %}" alt="Royal Life Logo" class="w-32 h-32 rounded-full border-2 border-gold shadow-2xl mb-6">
-
-            <h1 class="font-serif-luxury text-3xl md:text-5xl font-extrabold text-gold tracking-wider mb-2 uppercase">
-                ROYAL LIFE
-            </h1>
-            <p class="font-serif-luxury text-sm md:text-base text-amber-200 tracking-widest uppercase mb-8">
-                Sua essência, sua escolha, seu estilo.
-            </p>
-
-            <a href="#catalogo" class="border border-gold text-gold hover:bg-gold hover:text-black font-semibold px-8 py-3 text-xs uppercase tracking-widest transition duration-300">
-                Explorar Catálogo
+    <header class="navbar-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" onclick="toggleSidebar()">
+                <span class="hamburger-icon">&#9776;</span>
+            </button>
+            <a href="/" class="brand-logo">
+                <span>ROYAL LIFE</span>
             </a>
         </div>
-    </section>
 
-    <section id="sobre" class="max-w-7xl mx-auto px-6 py-20 border-b border-gold-dark">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <nav class="header-nav">
+            <a href="#marca">A MARCA</a>
+            <a href="#colecao">COLEÇÃO</a>
+            <a href="#contato">CONTATO</a>
+        </nav>
+    </header>
 
-            <div class="border border-gold-dark bg-zinc-950 p-8 rounded-lg text-center flex flex-col items-center">
-                <span class="text-gold text-3xl mb-3">👑</span>
-                <h3 class="font-serif-luxury text-2xl text-gold uppercase tracking-wider mb-4 border-b border-gold-dark pb-2 w-full">
-                    MISSÃO
-                </h3>
-                <p class="text-sm text-gray-300 leading-relaxed font-light">
-                    Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a <strong class="text-gold">personalidade</strong>, a <strong class="text-gold">confiança</strong> e o <strong class="text-gold">estilo</strong> de cada cliente.
-                </p>
-                <p class="mt-6 text-xs text-amber-200/80 italic">
-                    Mais do que perfumes, entregamos identidade.
-                </p>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <h3>CATEGORIAS</h3>
+            <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="accordion-item">
+                <button class="accordion-btn" onclick="toggleAccordion(this)">
+                    MASCULINO <span class="arrow">&#10095;</span>
+                </button>
+                <div class="accordion-content">
+                    <a href="/colecao/?genero=masculino&marca=lattafa">Lattafa</a>
+                    <a href="/colecao/?genero=masculino&marca=armaf">Armaf</a>
+                    <a href="/colecao/?genero=masculino&marca=afnan">Afnan</a>
+                    <a href="/colecao/?genero=masculino&marca=maison-alhambra">Maison Alhambra</a>
+                </div>
             </div>
 
-            <div class="border border-gold-dark bg-zinc-950 p-8 rounded-lg text-center flex flex-col items-center">
-                <span class="text-gold text-3xl mb-3">💎</span>
-                <h3 class="font-serif-luxury text-2xl text-gold uppercase tracking-wider mb-4 border-b border-gold-dark pb-2 w-full">
-                    VALORES
-                </h3>
-                <ul class="text-sm text-gray-300 space-y-3 font-light text-left w-full pl-4">
-                    <li class="flex items-center gap-2"><span class="text-gold">✓</span> Autenticidade em cada fragrância</li>
-                    <li class="flex items-center gap-2"><span class="text-gold">✓</span> Qualidade acima de tudo</li>
-                    <li class="flex items-center gap-2"><span class="text-gold">✓</span> Transparência e confiança</li>
-                    <li class="flex items-center gap-2"><span class="text-gold">✓</span> Atendimento humanizado</li>
-                    <li class="flex items-center gap-2"><span class="text-gold">✓</span> Elegância nos detalhes</li>
+            <div class="accordion-item">
+                <button class="accordion-btn" onclick="toggleAccordion(this)">
+                    FEMININO <span class="arrow">&#10095;</span>
+                </button>
+                <div class="accordion-content">
+                    <a href="/colecao/?genero=feminino&marca=lattafa">Lattafa</a>
+                    <a href="/colecao/?genero=feminino&marca=armaf">Armaf</a>
+                    <a href="/colecao/?genero=feminino&marca=afnan">Afnan</a>
+                    <a href="/colecao/?genero=feminino&marca=maison-alhambra">Maison Alhambra</a>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-btn" onclick="toggleAccordion(this)">
+                    UNISSEX <span class="arrow">&#10095;</span>
+                </button>
+                <div class="accordion-content">
+                    <a href="/colecao/?genero=unissex&marca=lattafa">Lattafa</a>
+                    <a href="/colecao/?genero=unissex&marca=armaf">Armaf</a>
+                    <a href="/colecao/?genero=unissex&marca=afnan">Afnan</a>
+                    <a href="/colecao/?genero=unissex&marca=maison-alhambra">Maison Alhambra</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <section class="hero-section">
+            <h1 class="hero-title">ROYAL LIFE</h1>
+            <p class="hero-subtitle">SUA ESSÊNCIA, SUA ESCOLHA, SEU ESTILO.</p>
+            <a href="#colecao" class="catalog-btn">EXPLORAR CATÁLOGO</a>
+        </section>
+
+        <section class="info-cards">
+            <div class="card">
+                <div class="card-icon">👑</div>
+                <h2 class="card-title">MISSÃO</h2>
+                <p class="card-text">Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade, a confiança e o estilo de cada cliente.</p>
+                <p class="card-highlight">Mais do que perfumes, entregamos identidade.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💎</div>
+                <h2 class="card-title">VALORES</h2>
+                <ul class="card-list">
+                    <li>✓ Autenticidade em cada fragrância</li>
+                    <li>✓ Qualidade acima de tudo</li>
+                    <li>✓ Transparência e confiança</li>
+                    <li>✓ Atendimento humanizado</li>
+                    <li>✓ Elegância nos detalhes</li>
                 </ul>
             </div>
 
-            <div class="border border-gold-dark bg-zinc-950 p-8 rounded-lg text-center flex flex-col items-center">
-                <span class="text-gold text-3xl mb-3">⚜️</span>
-                <h3 class="font-serif-luxury text-2xl text-gold uppercase tracking-wider mb-4 border-b border-gold-dark pb-2 w-full">
-                    PROPÓSITO
-                </h3>
-                <p class="text-sm text-gray-300 leading-relaxed font-light mb-6">
-                    Ajudar você a encontrar a fragrância que represente <strong class="text-gold">quem você é</strong>.
-                </p>
-                <div class="border-t border-gold-dark pt-4 w-full text-xs text-amber-200 tracking-wider uppercase space-y-1">
-                    <p>✨ É PRESENÇA.</p>
-                    <p>💎 É MEMÓRIA.</p>
-                    <p>👑 É IDENTIDADE.</p>
-                </div>
+            <div class="card">
+                <div class="card-icon">⚜️</div>
+                <h2 class="card-title">PROPÓSITO</h2>
+                <p class="card-text">Ajudar você a encontrar a fragrância que represente quem você é.</p>
+                <ul class="card-list" style="text-align: center;">
+                    <li>✨ É PRESENÇA.</li>
+                    <li>💎 É MEMÓRIA.</li>
+                    <li>👑 É IDENTIDADE.</li>
+                </ul>
             </div>
-
-        </div>
-    </section>
-
-    <main id="catalogo" class="max-w-7xl mx-auto px-6 py-20">
-        <h2 class="font-serif-luxury text-3xl font-bold uppercase tracking-widest mb-12 text-center text-gold">
-            Nossa Coleção
-        </h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {% for perfume in perfumes %}
-            <div class="bg-zinc-950 border border-gold-dark rounded-lg p-6 flex flex-col justify-between hover:border-gold transition duration-300">
-                <div>
-                    {% if perfume.imagem %}
-                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="w-full h-64 object-cover rounded mb-4 border border-zinc-800">
-                    {% else %}
-                    <div class="w-full h-64 bg-zinc-900 border border-zinc-800 rounded flex items-center justify-center mb-4 text-gray-500">
-                        <span>[ Sem Foto ]</span>
-                    </div>
-                    {% endif %}
-
-                    <h3 class="font-serif-luxury font-bold text-lg text-gold uppercase tracking-wider mb-1">{{ perfume.nome }}</h3>
-                    <p class="text-xs text-gray-400 mb-2"><strong class="text-amber-200">Topo:</strong> {{ perfume.notas_saida }}</p>
-                    <p class="text-xs text-gray-300 mb-4 line-clamp-3 font-light">{{ perfume.descricao }}</p>
-                </div>
-                <div>
-                    <span class="block text-xl font-bold text-white mb-4">R$ {{ perfume.preco }}</span>
-                    <button class="w-full bg-gold hover:bg-amber-400 text-black font-bold py-3 uppercase text-xs tracking-widest transition">
-                        Ver Detalhes
-                    </button>
-                </div>
-            </div>
-            {% empty %}
-            <p class="text-gray-500 text-center col-span-full">Nenhum perfume cadastrado no momento.</p>
-            {% endfor %}
-        </div>
+        </section>
     </main>
 
-    <footer class="border-t border-gold-dark py-8 text-center text-xs text-gray-500">
-        <p class="font-serif-luxury text-gold tracking-widest mb-2">ROYAL LIFE</p>
-        <p>Sua essência, sua escolha, seu estilo.</p>
-    </footer>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebarMenu');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
 
+        function toggleAccordion(button) {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+    </script>
 </body>
 </html>
