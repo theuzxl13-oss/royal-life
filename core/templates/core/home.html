@@ -7,21 +7,69 @@
     <title>Royal Life - Fragrâncias de Luxo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        body { background-color: #000; color: #fff; }
+        body { background-color: #000; color: #fff; position: relative; overflow-x: hidden; }
 
         /* Cabeçalho / Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 50px;
+            padding: 20px 40px;
             border-bottom: 1px solid #1a1a1a;
         }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        
+        /* Botão do Menu Hamburguer */
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
         .brand-name { color: #d4af37; font-family: serif; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
         .nav-links a { color: #ccc; text-decoration: none; margin-left: 30px; font-size: 13px; letter-spacing: 1px; transition: color 0.3s; }
         .nav-links a:hover { color: #d4af37; }
 
-        /* Hero / Seção Principal com Logo */
+        /* Sidebar / Menu Lateral */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(3px);
+            display: none;
+            z-index: 999;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0; left: -320px;
+            width: 300px; height: 100vh;
+            background-color: #080808;
+            border-right: 1px solid #1a1a1a;
+            z-index: 1000;
+            padding: 30px 20px;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar-close {
+            background: none; border: none; color: #888; font-size: 24px;
+            float: right; cursor: pointer; margin-bottom: 20px;
+        }
+        .sidebar-close:hover { color: #fff; }
+        .sidebar-title { color: #d4af37; font-family: serif; font-size: 18px; letter-spacing: 2px; margin-bottom: 25px; clear: both; }
+
+        .category-group { margin-bottom: 20px; }
+        .category-title { color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+        .category-links { list-style: none; padding-left: 10px; }
+        .category-links li { margin-bottom: 8px; }
+        .category-links a { color: #aaa; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .category-links a:hover { color: #d4af37; }
+
+        /* Hero / Topo com a Logo Dourada */
         .hero-section {
             text-align: center;
             padding: 60px 20px 40px 20px;
@@ -36,20 +84,8 @@
             margin-bottom: 20px;
             filter: drop-shadow(0px 0px 15px rgba(212, 175, 55, 0.3));
         }
-        .hero-title {
-            color: #d4af37;
-            font-family: serif;
-            font-size: 36px;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-        .hero-subtitle {
-            color: #aaa;
-            font-size: 13px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
+        .hero-title { color: #d4af37; font-family: serif; font-size: 36px; letter-spacing: 3px; margin-bottom: 10px; }
+        .hero-subtitle { color: #aaa; font-size: 13px; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
         .btn-catalog {
             display: inline-block;
             border: 1px solid #d4af37;
@@ -61,100 +97,83 @@
             transition: all 0.3s;
             border-radius: 2px;
         }
-        .btn-catalog:hover {
-            background-color: #d4af37;
-            color: #000;
-        }
+        .btn-catalog:hover { background-color: #d4af37; color: #000; }
 
         /* Seção de Lançamentos / Promoções */
-        .section-container {
-            max-width: 1200px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
+        .section-container { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
         .section-title {
-            text-align: center;
-            color: #d4af37;
-            font-family: serif;
-            font-size: 24px;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-            position: relative;
+            text-align: center; color: #d4af37; font-family: serif; font-size: 24px;
+            letter-spacing: 2px; margin-bottom: 40px; position: relative;
         }
         .section-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 1px;
-            background: #d4af37;
-            margin: 10px auto 0 auto;
+            content: ''; display: block; width: 50px; height: 1px; background: #d4af37; margin: 10px auto 0 auto;
         }
 
-        .products-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-        }
+        .products-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
         .product-card {
-            background-color: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            width: 250px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s, border-color 0.3s;
+            background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px;
+            width: 250px; padding: 20px; text-align: center; transition: transform 0.3s, border-color 0.3s;
         }
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: #d4af37;
-        }
-        .product-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            background-color: #111;
-        }
+        .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+        .product-img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; background-color: #111; }
         .product-name { color: #d4af37; font-family: serif; font-size: 16px; margin-bottom: 8px; }
         .product-price { color: #fff; font-weight: bold; font-size: 16px; }
 
         /* Seção Institucional: Missão, Valores e Propósito */
         .institutional-section {
-            background-color: #050505;
-            border-top: 1px solid #1a1a1a;
-            padding: 80px 20px;
-            margin-top: 80px;
+            background-color: #050505; border-top: 1px solid #1a1a1a; padding: 80px 20px; margin-top: 80px;
         }
-        .cards-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .info-card {
-            background-color: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 30px;
-            width: 320px;
-            text-align: center;
-        }
+        .cards-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .info-card { background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px; padding: 30px; width: 320px; text-align: center; }
         .info-card-icon { font-size: 24px; margin-bottom: 15px; }
         .info-card-title { color: #d4af37; font-family: serif; font-size: 18px; margin-bottom: 15px; letter-spacing: 2px; }
         .info-card-text { color: #aaa; font-size: 13px; line-height: 1.6; }
-        .info-card-text ul { list-style: none; text-align: left; margin-top: 10px; }
-        .info-card-text li { margin-bottom: 6px; }
         .highlight-quote { color: #d4af37; font-style: italic; font-size: 12px; margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+        <h2 class="sidebar-title">CATEGORIAS</h2>
+
+        <div class="category-group">
+            <div class="category-title">MASCULINO</div>
+            <ul class="category-links">
+                <li><a href="/colecao/?genero=masculino&marca=lattafa">Lattafa</a></li>
+                <li><a href="/colecao/?genero=masculino&marca=armaf">Armaf</a></li>
+                <li><a href="/colecao/?genero=masculino&marca=afnan">Afnan</a></li>
+                <li><a href="/colecao/?genero=masculino&marca=maison-alhambra">Maison Alhambra</a></li>
+            </ul>
+        </div>
+
+        <div class="category-group">
+            <div class="category-title">FEMININO</div>
+            <ul class="category-links">
+                <li><a href="/colecao/?genero=feminino&marca=lattafa">Lattafa</a></li>
+                <li><a href="/colecao/?genero=feminino&marca=armaf">Armaf</a></li>
+                <li><a href="/colecao/?genero=feminino&marca=afnan">Afnan</a></li>
+                <li><a href="/colecao/?genero=feminino&marca=maison-alhambra">Maison Alhambra</a></li>
+            </ul>
+        </div>
+
+        <div class="category-group">
+            <div class="category-title">UNISSEX</div>
+            <ul class="category-links">
+                <li><a href="/colecao/?genero=unissex&marca=lattafa">Lattafa</a></li>
+                <li><a href="/colecao/?genero=unissex&marca=armaf">Armaf</a></li>
+                <li><a href="/colecao/?genero=unissex&marca=afnan">Afnan</a></li>
+                <li><a href="/colecao/?genero=unissex&marca=maison-alhambra">Maison Alhambra</a></li>
+            </ul>
+        </div>
+    </div>
+
     <div class="navbar">
-        <div class="brand-name">ROYAL LIFE</div>
+        <div class="nav-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+            <div class="brand-name">ROYAL LIFE</div>
+        </div>
         <div class="nav-links">
             <a href="#">A MARCA</a>
             <a href="/colecao/">COLEÇÃO</a>
@@ -164,7 +183,6 @@
 
     <div class="hero-section">
         <img src="{% static 'core/img/logo.png' %}" alt="Royal Life Logo" class="main-logo" onerror="this.style.display='none'">
-        
         <h1 class="hero-title">ROYAL LIFE</h1>
         <p class="hero-subtitle">SUA ESSÊNCIA, SUA ESCOLHA, SEU ESTILO.</p>
         <a href="/colecao/" class="btn-catalog">EXPLORAR CATÁLOGO</a>
@@ -194,9 +212,7 @@
             <div class="info-card">
                 <div class="info-card-icon">👑</div>
                 <h3 class="info-card-title">MISSÃO</h3>
-                <p class="info-card-text">
-                    Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade, a confiança e o estilo de cada cliente.
-                </p>
+                <p class="info-card-text">Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade e o estilo de cada cliente.</p>
                 <span class="highlight-quote">Mais do que perfumes, entregamos identidade.</span>
             </div>
 
@@ -204,13 +220,11 @@
                 <div class="info-card-icon">💎</div>
                 <h3 class="info-card-title">VALORES</h3>
                 <div class="info-card-text">
-                    <ul>
-                        <td>✓ Autenticidade em cada fragrância</td><br>
-                        <td>✓ Qualidade acima de tudo</td><br>
-                        <td>✓ Transparência e confiança</td><br>
-                        <td>✓ Atendimento humanizado</td><br>
-                        <td>✓ Elegância nos detalhes</td>
-                    </ul>
+                    <p>✓ Autenticidade em cada fragrância</p>
+                    <p>✓ Qualidade acima de tudo</p>
+                    <p>✓ Transparência e confiança</p>
+                    <p>✓ Atendimento humanizado</p>
+                    <p>✓ Elegância nos detalhes</p>
                 </div>
             </div>
 
@@ -227,5 +241,18 @@
         </div>
     </div>
 
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.style.display = 'none';
+            } else {
+                sidebar.classList.add('active');
+                overlay.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
