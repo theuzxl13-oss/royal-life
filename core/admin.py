@@ -2,10 +2,10 @@ from django.contrib import admin
 from .models import Perfume, PerfumeMasculino, PerfumeFeminino, PerfumeUnissex
 
 class BasePerfumeAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'marca', 'preco', 'criado_em')
+    list_display = ('nome', 'marca', 'preco', 'estoque', 'criado_em')
     list_filter = ('marca',)
     search_fields = ('nome', 'descricao')
-    fields = ('nome', 'marca', 'preco', 'descricao', 'imagem', 'notas_saida', 'notas_coracao', 'notas_fundo')
+    fields = ('nome', 'marca', 'preco', 'estoque', 'descricao', 'imagem', 'notas_saida', 'notas_coracao', 'notas_fundo')
 
 @admin.register(PerfumeMasculino)
 class PerfumeMasculinoAdmin(BasePerfumeAdmin):
@@ -39,6 +39,6 @@ class PerfumeUnissexAdmin(BasePerfumeAdmin):
 
 @admin.register(Perfume)
 class PerfumeGeralAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'genero', 'marca', 'preco')
+    list_display = ('nome', 'genero', 'marca', 'preco', 'estoque')
     list_filter = ('genero', 'marca')
     search_fields = ('nome',)
