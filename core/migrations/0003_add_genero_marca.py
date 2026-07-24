@@ -4,7 +4,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),  # Depende da primeira migração
+        ('core', '0002_perfume_imagem'),  # Agora aponta para a migração 0002 existente
     ]
 
     operations = [
