@@ -4,420 +4,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Life - Sua Essência, Sua Escolha, Seu Estilo</title>
+    <title>Royal Life - Fragrâncias de Luxo</title>
     <style>
-        /* Estilos Globais e do Cabeçalho */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #000; color: #fff; }
 
-        body {
-            background-color: #000;
-            color: #fff;
-        }
-
-        .navbar-header {
+        /* Cabeçalho / Navbar */
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
-            background-color: #000;
+            padding: 20px 50px;
             border-bottom: 1px solid #1a1a1a;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
+        .brand-name { color: #d4af37; font-family: serif; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 30px; font-size: 13px; letter-spacing: 1px; transition: color 0.3s; }
+        .nav-links a:hover { color: #d4af37; }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .menu-toggle-btn {
-            background: none;
-            border: none;
-            color: #d4af37;
-            font-size: 26px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .menu-toggle-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #d4af37;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .header-nav {
-            display: flex;
-            gap: 30px;
-        }
-
-        .header-nav a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 13px;
-            letter-spacing: 1.5px;
-            transition: color 0.3s;
-        }
-
-        .header-nav a:hover {
-            color: #d4af37;
-        }
-
-        /* Menu Lateral (Leque) */
-        .sidebar-menu {
-            position: fixed;
-            top: 0;
-            left: -320px;
-            width: 300px;
-            height: 100vh;
-            background-color: #0b0b0b;
-            border-right: 1px solid #222;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            transition: left 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-menu.active {
-            left: 0;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(2px);
-            z-index: 999;
-            display: none;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #222;
-        }
-
-        .sidebar-header h3 {
-            color: #d4af37;
-            font-family: serif;
-            letter-spacing: 1px;
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            color: #fff;
-        }
-
-        .sidebar-content {
-            padding: 15px 0;
-            overflow-y: auto;
-        }
-
-        .accordion-btn {
-            width: 100%;
-            padding: 15px 20px;
-            background: none;
-            border: none;
-            color: #e0e0e0;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #141414;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .accordion-btn:hover {
-            background: #141414;
-            color: #d4af37;
-        }
-
-        .accordion-btn .arrow {
-            font-size: 10px;
-            transition: transform 0.3s;
-        }
-
-        .accordion-btn.active .arrow {
-            transform: rotate(90deg);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            background-color: #050505;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .accordion-content a {
-            display: block;
-            padding: 12px 35px;
-            color: #a0a0a0;
-            text-decoration: none;
-            font-size: 13px;
-            border-bottom: 1px solid #111;
-            transition: color 0.2s;
-        }
-
-        .accordion-content a:hover {
-            color: #d4af37;
-        }
-
-        /* Seção Hero */
+        /* Hero / Seção Principal com Logo */
         .hero-section {
             text-align: center;
-            padding: 80px 20px;
-            background-color: #000;
+            padding: 60px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        .logo-central {
-            width: 140px;
+        .main-logo {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
             margin-bottom: 20px;
+            filter: drop-shadow(0px 0px 15px rgba(212, 175, 55, 0.3));
         }
-
         .hero-title {
-            font-size: 42px;
             color: #d4af37;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
             font-family: serif;
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            color: #ccc;
+            font-size: 36px;
             letter-spacing: 3px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
-
-        .catalog-btn {
+        .hero-subtitle {
+            color: #aaa;
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        .btn-catalog {
             display: inline-block;
-            padding: 12px 30px;
             border: 1px solid #d4af37;
             color: #d4af37;
+            padding: 12px 30px;
             text-decoration: none;
             font-size: 12px;
             letter-spacing: 2px;
             transition: all 0.3s;
+            border-radius: 2px;
         }
-
-        .catalog-btn:hover {
+        .btn-catalog:hover {
             background-color: #d4af37;
             color: #000;
         }
 
-        /* Seção Cards */
-        .info-cards {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 60px 40px;
-            flex-wrap: wrap;
+        /* Seção de Lançamentos / Promoções */
+        .section-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            text-align: center;
+            color: #d4af37;
+            font-family: serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 1px;
+            background: #d4af37;
+            margin: 10px auto 0 auto;
         }
 
-        .card {
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .product-card {
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            width: 250px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+        }
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background-color: #111;
+        }
+        .product-name { color: #d4af37; font-family: serif; font-size: 16px; margin-bottom: 8px; }
+        .product-price { color: #fff; font-weight: bold; font-size: 16px; }
+
+        /* Seção Institucional: Missão, Valores e Propósito */
+        .institutional-section {
             background-color: #050505;
+            border-top: 1px solid #1a1a1a;
+            padding: 80px 20px;
+            margin-top: 80px;
+        }
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .info-card {
+            background-color: #0a0a0a;
             border: 1px solid #1a1a1a;
             border-radius: 8px;
             padding: 30px;
             width: 320px;
             text-align: center;
         }
-
-        .card-icon {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .card-title {
-            color: #d4af37;
-            font-size: 18px;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-            font-family: serif;
-        }
-
-        .card-text {
-            font-size: 13px;
-            color: #aaa;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .card-list {
-            list-style: none;
-            text-align: left;
-            font-size: 13px;
-            color: #aaa;
-            line-height: 2;
-        }
-
-        .card-highlight {
-            color: #d4af37;
-            font-size: 12px;
-            font-style: italic;
-        }
+        .info-card-icon { font-size: 24px; margin-bottom: 15px; }
+        .info-card-title { color: #d4af37; font-family: serif; font-size: 18px; margin-bottom: 15px; letter-spacing: 2px; }
+        .info-card-text { color: #aaa; font-size: 13px; line-height: 1.6; }
+        .info-card-text ul { list-style: none; text-align: left; margin-top: 10px; }
+        .info-card-text li { margin-bottom: 6px; }
+        .highlight-quote { color: #d4af37; font-style: italic; font-size: 12px; margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
 
-    <header class="navbar-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" onclick="toggleSidebar()">
-                <span class="hamburger-icon">&#9776;</span>
-            </button>
-            <a href="/" class="brand-logo">
-                <span>ROYAL LIFE</span>
-            </a>
+    <div class="navbar">
+        <div class="brand-name">ROYAL LIFE</div>
+        <div class="nav-links">
+            <a href="#">A MARCA</a>
+            <a href="/colecao/">COLEÇÃO</a>
+            <a href="#">CONTATO</a>
         </div>
+    </div>
 
-        <nav class="header-nav">
-            <a href="#marca">A MARCA</a>
-            <a href="#colecao">COLEÇÃO</a>
-            <a href="#contato">CONTATO</a>
-        </nav>
-    </header>
+    <div class="hero-section">
+        <img src="{% static 'core/img/logo.png' %}" alt="Royal Life Logo" class="main-logo" onerror="this.style.display='none'">
+        
+        <h1 class="hero-title">ROYAL LIFE</h1>
+        <p class="hero-subtitle">SUA ESSÊNCIA, SUA ESCOLHA, SEU ESTILO.</p>
+        <a href="/colecao/" class="btn-catalog">EXPLORAR CATÁLOGO</a>
+    </div>
 
-    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <aside class="sidebar-menu" id="sidebarMenu">
-        <div class="sidebar-header">
-            <h3>CATEGORIAS</h3>
-            <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+    <div class="section-container">
+        <h2 class="section-title">LANÇAMENTOS & DESTAQUES</h2>
+        <div class="products-grid">
+            {% for perfume in lancamentos %}
+                <div class="product-card">
+                    {% if perfume.imagem %}
+                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                    {% else %}
+                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                    {% endif %}
+                    <h3 class="product-name">{{ perfume.nome }}</h3>
+                    <p class="product-price">R$ {{ perfume.preco }}</p>
+                </div>
+            {% empty %}
+                <p style="color:#666; font-size:14px;">Nenhum lançamento cadastrado no momento.</p>
+            {% endfor %}
         </div>
+    </div>
 
-        <div class="sidebar-content">
-            <div class="accordion-item">
-                <button class="accordion-btn" onclick="toggleAccordion(this)">
-                    MASCULINO <span class="arrow">&#10095;</span>
-                </button>
-                <div class="accordion-content">
-                    <a href="/colecao/?genero=masculino&marca=lattafa">Lattafa</a>
-                    <a href="/colecao/?genero=masculino&marca=armaf">Armaf</a>
-                    <a href="/colecao/?genero=masculino&marca=afnan">Afnan</a>
-                    <a href="/colecao/?genero=masculino&marca=maison-alhambra">Maison Alhambra</a>
+    <div class="institutional-section">
+        <div class="cards-grid">
+            <div class="info-card">
+                <div class="info-card-icon">👑</div>
+                <h3 class="info-card-title">MISSÃO</h3>
+                <p class="info-card-text">
+                    Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade, a confiança e o estilo de cada cliente.
+                </p>
+                <span class="highlight-quote">Mais do que perfumes, entregamos identidade.</span>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-icon">💎</div>
+                <h3 class="info-card-title">VALORES</h3>
+                <div class="info-card-text">
+                    <ul>
+                        <td>✓ Autenticidade em cada fragrância</td><br>
+                        <td>✓ Qualidade acima de tudo</td><br>
+                        <td>✓ Transparência e confiança</td><br>
+                        <td>✓ Atendimento humanizado</td><br>
+                        <td>✓ Elegância nos detalhes</td>
+                    </ul>
                 </div>
             </div>
 
-            <div class="accordion-item">
-                <button class="accordion-btn" onclick="toggleAccordion(this)">
-                    FEMININO <span class="arrow">&#10095;</span>
-                </button>
-                <div class="accordion-content">
-                    <a href="/colecao/?genero=feminino&marca=lattafa">Lattafa</a>
-                    <a href="/colecao/?genero=feminino&marca=armaf">Armaf</a>
-                    <a href="/colecao/?genero=feminino&marca=afnan">Afnan</a>
-                    <a href="/colecao/?genero=feminino&marca=maison-alhambra">Maison Alhambra</a>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <button class="accordion-btn" onclick="toggleAccordion(this)">
-                    UNISSEX <span class="arrow">&#10095;</span>
-                </button>
-                <div class="accordion-content">
-                    <a href="/colecao/?genero=unissex&marca=lattafa">Lattafa</a>
-                    <a href="/colecao/?genero=unissex&marca=armaf">Armaf</a>
-                    <a href="/colecao/?genero=unissex&marca=afnan">Afnan</a>
-                    <a href="/colecao/?genero=unissex&marca=maison-alhambra">Maison Alhambra</a>
-                </div>
+            <div class="info-card">
+                <div class="info-card-icon">⚜️</div>
+                <h3 class="info-card-title">PROPÓSITO</h3>
+                <p class="info-card-text">
+                    Ajudar você a encontrar a fragrância que represente quem você é.<br><br>
+                    ✨ É PRESENÇA.<br>
+                    💎 É MEMÓRIA.<br>
+                    👑 É IDENTIDADE.
+                </p>
             </div>
         </div>
-    </aside>
+    </div>
 
-    <main>
-        <section class="hero-section">
-            <h1 class="hero-title">ROYAL LIFE</h1>
-            <p class="hero-subtitle">SUA ESSÊNCIA, SUA ESCOLHA, SEU ESTILO.</p>
-            <a href="#colecao" class="catalog-btn">EXPLORAR CATÁLOGO</a>
-        </section>
-
-        <section class="info-cards">
-            <div class="card">
-                <div class="card-icon">👑</div>
-                <h2 class="card-title">MISSÃO</h2>
-                <p class="card-text">Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade, a confiança e o estilo de cada cliente.</p>
-                <p class="card-highlight">Mais do que perfumes, entregamos identidade.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">💎</div>
-                <h2 class="card-title">VALORES</h2>
-                <ul class="card-list">
-                    <li>✓ Autenticidade em cada fragrância</li>
-                    <li>✓ Qualidade acima de tudo</li>
-                    <li>✓ Transparência e confiança</li>
-                    <li>✓ Atendimento humanizado</li>
-                    <li>✓ Elegância nos detalhes</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">⚜️</div>
-                <h2 class="card-title">PROPÓSITO</h2>
-                <p class="card-text">Ajudar você a encontrar a fragrância que represente quem você é.</p>
-                <ul class="card-list" style="text-align: center;">
-                    <li>✨ É PRESENÇA.</li>
-                    <li>💎 É MEMÓRIA.</li>
-                    <li>👑 É IDENTIDADE.</li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebarMenu');
-            const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        function toggleAccordion(button) {
-            button.classList.toggle('active');
-            const content = button.nextElementSibling;
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
-        }
-    </script>
 </body>
 </html>
