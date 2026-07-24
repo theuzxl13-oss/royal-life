@@ -1,10 +1,11 @@
 from django.db import migrations, models
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_perfume_imagem'),  # Agora aponta para a migração 0002 existente
+        ('core', '0002_perfume_imagem'),
     ]
 
     operations = [
@@ -27,6 +28,15 @@ class Migration(migrations.Migration):
                 default='lattafa',
                 max_length=30,
                 verbose_name='Marca'
+            ),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='perfume',
+            name='criado_em',
+            field=models.DateTimeField(
+                auto_now_add=True,
+                default=django.utils.timezone.now
             ),
             preserve_default=False,
         ),
