@@ -6,8 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Life - Fragrâncias de Luxo</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        body { background-color: #000; color: #fff; position: relative; overflow-x: hidden; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
 
         /* Cabeçalho / Navbar */
         .navbar {
@@ -17,9 +28,13 @@
             padding: 20px 40px;
             border-bottom: 1px solid #1a1a1a;
         }
-        .nav-left { display: flex; align-items: center; gap: 20px; }
-        
-        /* Botão do Menu Hamburguer */
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         .menu-toggle {
             background: none;
             border: none;
@@ -29,24 +44,46 @@
             padding: 5px;
         }
 
-        .brand-name { color: #d4af37; font-family: serif; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
-        .nav-links a { color: #ccc; text-decoration: none; margin-left: 30px; font-size: 13px; letter-spacing: 1px; transition: color 0.3s; }
-        .nav-links a:hover { color: #d4af37; }
+        .brand-name {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+            .nav-links a:hover {
+                color: #d4af37;
+            }
 
         /* Sidebar / Menu Lateral */
         .sidebar-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(3px);
             display: none;
             z-index: 999;
         }
+
         .sidebar {
             position: fixed;
-            top: 0; left: -320px;
-            width: 300px; height: 100vh;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
             background-color: #080808;
             border-right: 1px solid #1a1a1a;
             z-index: 1000;
@@ -54,20 +91,65 @@
             transition: left 0.3s ease;
             overflow-y: auto;
         }
-        .sidebar.active { left: 0; }
-        .sidebar-close {
-            background: none; border: none; color: #888; font-size: 24px;
-            float: right; cursor: pointer; margin-bottom: 20px;
-        }
-        .sidebar-close:hover { color: #fff; }
-        .sidebar-title { color: #d4af37; font-family: serif; font-size: 18px; letter-spacing: 2px; margin-bottom: 25px; clear: both; }
 
-        .category-group { margin-bottom: 20px; }
-        .category-title { color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
-        .category-links { list-style: none; padding-left: 10px; }
-        .category-links li { margin-bottom: 8px; }
-        .category-links a { color: #aaa; text-decoration: none; font-size: 13px; transition: color 0.2s; }
-        .category-links a:hover { color: #d4af37; }
+            .sidebar.active {
+                left: 0;
+            }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            float: right;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+            .sidebar-close:hover {
+                color: #fff;
+            }
+
+        .sidebar-title {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            clear: both;
+        }
+
+        .category-group {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .category-links {
+            list-style: none;
+            padding-left: 10px;
+        }
+
+            .category-links li {
+                margin-bottom: 8px;
+            }
+
+            .category-links a {
+                color: #aaa;
+                text-decoration: none;
+                font-size: 13px;
+                transition: color 0.2s;
+            }
+
+                .category-links a:hover {
+                    color: #d4af37;
+                }
 
         /* Hero / Topo com a Logo Dourada */
         .hero-section {
@@ -77,6 +159,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .main-logo {
             width: 180px;
             height: 180px;
@@ -84,8 +167,23 @@
             margin-bottom: 20px;
             filter: drop-shadow(0px 0px 15px rgba(212, 175, 55, 0.3));
         }
-        .hero-title { color: #d4af37; font-family: serif; font-size: 36px; letter-spacing: 3px; margin-bottom: 10px; }
-        .hero-subtitle { color: #aaa; font-size: 13px; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
+
+        .hero-title {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 36px;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            color: #aaa;
+            font-size: 13px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
         .btn-catalog {
             display: inline-block;
             border: 1px solid #d4af37;
@@ -97,38 +195,261 @@
             transition: all 0.3s;
             border-radius: 2px;
         }
-        .btn-catalog:hover { background-color: #d4af37; color: #000; }
 
-        /* Seção de Lançamentos / Promoções */
-        .section-container { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
+            .btn-catalog:hover {
+                background-color: #d4af37;
+                color: #000;
+            }
+
+        /* Seção de Lançamentos */
+        .section-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
         .section-title {
-            text-align: center; color: #d4af37; font-family: serif; font-size: 24px;
-            letter-spacing: 2px; margin-bottom: 40px; position: relative;
-        }
-        .section-title::after {
-            content: ''; display: block; width: 50px; height: 1px; background: #d4af37; margin: 10px auto 0 auto;
+            text-align: center;
+            color: #d4af37;
+            font-family: serif;
+            font-size: 24px;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            position: relative;
         }
 
-        .products-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+            .section-title::after {
+                content: '';
+                display: block;
+                width: 50px;
+                height: 1px;
+                background: #d4af37;
+                margin: 10px auto 0 auto;
+            }
+
+        .products-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
         .product-card {
-            background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px;
-            width: 250px; padding: 20px; text-align: center; transition: transform 0.3s, border-color 0.3s;
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            width: 250px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            cursor: pointer;
+            position: relative;
         }
-        .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
-        .product-img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; background-color: #111; }
-        .product-name { color: #d4af37; font-family: serif; font-size: 16px; margin-bottom: 8px; }
-        .product-price { color: #fff; font-weight: bold; font-size: 16px; }
 
-        /* Seção Institucional: Missão, Valores e Propósito */
-        .institutional-section {
-            background-color: #050505; border-top: 1px solid #1a1a1a; padding: 80px 20px; margin-top: 80px;
+            .product-card:hover {
+                transform: translateY(-5px);
+                border-color: #d4af37;
+            }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            background-color: #111;
         }
-        .cards-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .info-card { background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px; padding: 30px; width: 320px; text-align: center; }
-        .info-card-icon { font-size: 24px; margin-bottom: 15px; }
-        .info-card-title { color: #d4af37; font-family: serif; font-size: 18px; margin-bottom: 15px; letter-spacing: 2px; }
-        .info-card-text { color: #aaa; font-size: 13px; line-height: 1.6; }
-        .highlight-quote { color: #d4af37; font-style: italic; font-size: 12px; margin-top: 15px; display: block; }
+
+        .product-name {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .btn-details {
+            display: inline-block;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 6px 15px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover .btn-details {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        /* Modal de Detalhes do Perfume */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border: 1px solid #d4af37;
+            border-radius: 8px;
+            max-width: 650px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+            display: flex;
+            gap: 25px;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+            .modal-close:hover {
+                color: #fff;
+            }
+
+        .modal-img {
+            width: 220px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #111;
+        }
+
+        .modal-info {
+            flex: 1;
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .modal-brand {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .modal-price {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-desc {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .modal-notes {
+            border-top: 1px solid #222;
+            padding-top: 12px;
+            font-size: 12px;
+            color: #aaa;
+            text-align: left;
+        }
+
+            .modal-notes p {
+                margin-bottom: 4px;
+            }
+
+            .modal-notes strong {
+                color: #d4af37;
+            }
+
+        /* Seção Institucional */
+        .institutional-section {
+            background-color: #050505;
+            border-top: 1px solid #1a1a1a;
+            padding: 80px 20px;
+            margin-top: 80px;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+        }
+
+        .info-card-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .info-card-title {
+            color: #d4af37;
+            font-family: serif;
+            font-size: 18px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .info-card-text {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .highlight-quote {
+            color: #d4af37;
+            font-style: italic;
+            font-size: 12px;
+            margin-top: 15px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -192,18 +513,37 @@
         <h2 class="section-title">LANÇAMENTOS & DESTAQUES</h2>
         <div class="products-grid">
             {% for perfume in lancamentos %}
-                <div class="product-card">
-                    {% if perfume.imagem %}
-                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                    {% else %}
-                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                    {% endif %}
-                    <h3 class="product-name">{{ perfume.nome }}</h3>
-                    <p class="product-price">R$ {{ perfume.preco }}</p>
-                </div>
+            <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                {% if perfume.imagem %}
+                <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                {% else %}
+                <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                {% endif %}
+                <h3 class="product-name">{{ perfume.nome }}</h3>
+                <p class="product-price">R$ {{ perfume.preco }}</p>
+                <span class="btn-details">VER DETALHES</span>
+            </div>
             {% empty %}
-                <p style="color:#666; font-size:14px;">Nenhum lançamento cadastrado no momento.</p>
+            <p style="color:#666; font-size:14px;">Nenhum lançamento cadastrado no momento.</p>
             {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+            <img src="" alt="" id="modalImg" class="modal-img">
+            <div class="modal-info">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <div class="modal-brand" id="modalBrand"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <p class="modal-desc" id="modalDesc"></p>
+                <div class="modal-notes" id="modalNotes">
+                    <p id="noteSaida"></p>
+                    <p id="noteCoracao"></p>
+                    <p id="noteFundo"></p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -252,6 +592,37 @@
                 sidebar.classList.add('active');
                 overlay.style.display = 'block';
             }
+        }
+
+        function openModal(nome, marca, preco, desc, img, saida, coracao, fundo) {
+            document.getElementById('modalTitle').innerText = nome;
+            document.getElementById('modalBrand').innerText = marca;
+            document.getElementById('modalPrice').innerText = 'R$ ' + preco;
+            document.getElementById('modalDesc').innerText = desc || 'Sem descrição cadastrada.';
+
+            const imgElement = document.getElementById('modalImg');
+            if (img) {
+                imgElement.src = img;
+                imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
+            }
+
+            document.getElementById('noteSaida').innerHTML = saida ? '<strong>Notas de Saída:</strong> ' + saida : '';
+            document.getElementById('noteCoracao').innerHTML = coracao ? '<strong>Notas de Coração:</strong> ' + coracao : '';
+            document.getElementById('noteFundo').innerHTML = fundo ? '<strong>Notas de Fundo:</strong> ' + fundo : '';
+
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            if (event.target.id === 'productModal') {
+                document.getElementById('productModal').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('productModal').style.display = 'none';
         }
     </script>
 </body>
