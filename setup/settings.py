@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sua-chave-secreta-aqui')
 
 # DEBUG: Desativa em produção se houver variável RENDER
-DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = ['*']
 
@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir arquivos estáticos no Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -37,9 +37,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Configuração das URLs e WSGI com o nome correto da pasta (royal_life)
-ROOT_URLCONF = 'royal_life.urls'
-WSGI_APPLICATION = 'royal_life.wsgi.application'
+# Configuração das URLs e WSGI com a pasta correta (setup)
+ROOT_URLCONF = 'setup.urls'
+WSGI_APPLICATION = 'setup.wsgi.application'
 
 TEMPLATES = [
     {
@@ -79,11 +79,11 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
-# ARQUIVOS ESTÁTICOS (CSS, JS, Imagens do site)
+# ARQUIVOS ESTÁTICOS (CSS, JS)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ARQUIVOS DE MÍDIA (Fotos dos perfumes enviadas no Admin)
+# ARQUIVOS DE MÍDIA (Fotos enviadas no Admin)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
