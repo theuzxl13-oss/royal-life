@@ -23,3 +23,15 @@ def colecao(request):
         'marca_selecionada': marca,
     }
     return render(request, 'core/colecao.html', context)
+from django.shortcuts import render
+from .models import Perfume, Campanha
+
+def home(request):
+    lancamentos = Perfume.objects.all()[:4] # ou seu filtro atual
+    campanha_ativa = Campanha.objects.filter(ativa=True).first() # Pega a primeira campanha ativa
+
+    context = {
+        'lancamentos': lancamentos,
+        'campanha_ativa': campanha_ativa,
+    }
+    return render(request, 'core/home.html', context)

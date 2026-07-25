@@ -20,7 +20,7 @@
             overflow-x: hidden;
         }
 
-        /* Cabeçalho / Navbar */
+        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -151,7 +151,7 @@
                     color: #d4af37;
                 }
 
-        /* Hero / Topo com a Logo Dourada */
+        /* Hero */
         .hero-section {
             text-align: center;
             padding: 60px 20px 40px 20px;
@@ -201,7 +201,7 @@
                 color: #000;
             }
 
-        /* Seção de Lançamentos */
+        /* Seções de Produtos */
         .section-container {
             max-width: 1200px;
             margin: 60px auto;
@@ -243,7 +243,6 @@
             text-align: center;
             transition: transform 0.3s, border-color 0.3s;
             cursor: pointer;
-            position: relative;
         }
 
             .product-card:hover {
@@ -290,7 +289,7 @@
             color: #d4af37;
         }
 
-        /* Modal de Detalhes do Perfume */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -398,7 +397,7 @@
                 color: #d4af37;
             }
 
-        /* Seção Institucional */
+        /* Institucional */
         .institutional-section {
             background-color: #050505;
             border-top: 1px solid #1a1a1a;
@@ -528,6 +527,34 @@
             {% endfor %}
         </div>
     </div>
+
+    {% if campanha_ativa %}
+    <div class="section-container" style="margin-top: 80px; border: 1px solid #d4af37; padding: 40px 20px; border-radius: 8px; background: rgba(212, 175, 55, 0.03);">
+        <h2 class="section-title">{{ campanha_ativa.titulo }}</h2>
+        {% if campanha_ativa.subtitulo %}
+        <p style="text-align: center; color: #aaa; margin-top: -30px; margin-bottom: 40px; font-size: 14px; letter-spacing: 1px;">
+            {{ campanha_ativa.subtitulo }}
+        </p>
+        {% endif %}
+
+        <div class="products-grid">
+            {% for perfume in campanha_ativa.perfumes.all %}
+            <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                {% if perfume.imagem %}
+                <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                {% else %}
+                <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                {% endif %}
+                <h3 class="product-name">{{ perfume.nome }}</h3>
+                <p class="product-price">R$ {{ perfume.preco }}</p>
+                <span class="btn-details">VER DETALHES</span>
+            </div>
+            {% empty %}
+            <p style="color:#666; font-size:14px; text-align:center; width:100%;">Nenhum perfume selecionado para esta promoção.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
