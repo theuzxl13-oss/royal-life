@@ -1,52 +1,14 @@
 from django.contrib import admin
-from .models import Perfume, PerfumeMasculino, PerfumeFeminino, PerfumeUnissex
-
-class BasePerfumeAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'marca', 'preco', 'estoque', 'criado_em')
-    list_filter = ('marca',)
-    search_fields = ('nome', 'descricao')
-    fields = ('nome', 'marca', 'preco', 'estoque', 'descricao', 'imagem', 'notas_saida', 'notas_coracao', 'notas_fundo')
-
-@admin.register(PerfumeMasculino)
-class PerfumeMasculinoAdmin(BasePerfumeAdmin):
-    def save_model(self, request, obj, form, change):
-        obj.genero = 'masculino'
-        super().save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(genero='masculino')
-
-
-@admin.register(PerfumeFeminino)
-class PerfumeFemininoAdmin(BasePerfumeAdmin):
-    def save_model(self, request, obj, form, change):
-        obj.genero = 'feminino'
-        super().save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(genero='feminino')
-
-
-@admin.register(PerfumeUnissex)
-class PerfumeUnissexAdmin(BasePerfumeAdmin):
-    def save_model(self, request, obj, form, change):
-        obj.genero = 'unissex'
-        super().save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(genero='unissex')
-
+from .models import Perfume, Campanha
 
 @admin.register(Perfume)
-class PerfumeGeralAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'genero', 'marca', 'preco', 'estoque')
-    list_filter = ('genero', 'marca')
-    search_fields = ('nome',)
-    from django.contrib import admin
-from .models import Perfume, Campanha
+class PerfumeAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'marca', 'genero', 'preco', 'estoque')
+    list_filter = ('marca', 'genero')
+    search_fields = ('nome', 'descricao')
 
 @admin.register(Campanha)
 class CampanhaAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'ativa')
     list_editable = ('ativa',)
-    filter_horizontal = ('perfumes',) # Facilita selecionar os perfumes na promoção
+    filter_horizontal = ('perfumes',)
