@@ -22,6 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # Cloudinary para armazenamento de mídia na nuvem
+    'cloudinary_storage',
+    'cloudinary',
+    
     # App do projeto
     'core',
 ]
@@ -86,6 +90,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # ARQUIVOS DE MÍDIA (Fotos enviadas no Admin)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# CONFIGURAÇÃO DO CLOUDINARY (Imagens permanentes na nuvem)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # CONFIGURAÇÃO DE CHAVE PRIMÁRIA
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
