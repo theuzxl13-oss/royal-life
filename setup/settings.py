@@ -1,6 +1,8 @@
 import os
+import re
 from pathlib import Path
 import dj_database_url
+import cloudinary
 
 # Diretórios
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,10 +92,38 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# CONFIGURAÇÃO DO CLOUDINARY (Lê CLOUDINARY_URL automaticamente)
-CLOUDINARY_STORAGE = {
-    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL'),
-}
+# CONFIGURAÇÃO E EXTRAÇÃO DO CLOUDINARY
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '').strip()
+
+if CLOUDINARY_URL:
+    match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
+    if match:
+        api_key, api_secret, cloud_name = match.groups()
+        CLOUDINARY_STORAGE = {
+            'CLOUD_NAME': cloud_name,
+            'API_KEY': api_key,
+            'API_SECRET': api_secret,
+        }
+        cloudinary.config(
+            cloud_name=cloud_name,
+            api_key=api_key,
+            api_secret=api_secret,
+            secure=True
+        )
+    else:
+        CLOUDINARY_STORAGE = {'CLOUDINARY_URL': CLOUDINARY_URL}
+else:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
+    cloudinary.config(
+        cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        api_key=os.environ.get('CLOUDINARY_API_KEY'),
+        api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+        secure=True
+    )
 
 # Suporte de armazenamento para Django
 STORAGES = {
