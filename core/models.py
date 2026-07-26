@@ -4,7 +4,7 @@ from django.db.utils import ProgrammingError, OperationalError
 from .models import Perfume, Campanha
 
 def limpar_tabelas_antigas_e_garantir_novas():
-    """Remove a tabela intermediária antiga para evitar erro de Foreign Key ao deletar perfumes."""
+    """Remove a tabela intermediária antiga para evitar erro de Foreign Key ao apagar perfumes."""
     try:
         with connection.cursor() as cursor:
             # 1. Garante a tabela nova
@@ -16,7 +16,7 @@ def limpar_tabelas_antigas_e_garantir_novas():
                     perfume_id bigint NOT NULL REFERENCES core_perfume(id) ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
                 );
             """)
-            # 2. Apaga a tabela antiga que travava a deleção dos perfumes
+            # 2. Apaga a tabela antiga que travava a eliminação dos perfumes
             cursor.execute("DROP TABLE IF EXISTS core_campanha_perfumes CASCADE;")
     except Exception as e:
         print(f"Aviso no banco: {e}")
