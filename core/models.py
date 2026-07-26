@@ -54,6 +54,14 @@ class CampanhaPerfume(models.Model):
         ordering = ['ordem']
 
     def __str__(self):
-        nome_perfume = self.perfume.nome if self.perfume else "Sem Perfume"
-        titulo_campanha = self.campanha.titulo if self.campanha else "Sem Campanha"
+        try:
+            nome_perfume = self.perfume.nome if self.perfume_id else "Sem Perfume"
+        except Exception:
+            nome_perfume = "Sem Perfume"
+
+        try:
+            titulo_campanha = self.campanha.titulo if self.campanha_id else "Sem Campanha"
+        except Exception:
+            titulo_campanha = "Sem Campanha"
+
         return f"{nome_perfume} - {titulo_campanha}"
