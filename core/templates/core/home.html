@@ -61,9 +61,9 @@
             transition: color 0.3s;
         }
 
-            .nav-links a:hover {
-                color: #d4af37;
-            }
+        .nav-links a:hover {
+            color: #d4af37;
+        }
 
         /* Sidebar / Menu Lateral */
         .sidebar-overlay {
@@ -92,9 +92,9 @@
             overflow-y: auto;
         }
 
-            .sidebar.active {
-                left: 0;
-            }
+        .sidebar.active {
+            left: 0;
+        }
 
         .sidebar-close {
             background: none;
@@ -106,9 +106,9 @@
             margin-bottom: 20px;
         }
 
-            .sidebar-close:hover {
-                color: #fff;
-            }
+        .sidebar-close:hover {
+            color: #fff;
+        }
 
         .sidebar-title {
             color: #d4af37;
@@ -136,20 +136,20 @@
             padding-left: 10px;
         }
 
-            .category-links li {
-                margin-bottom: 8px;
-            }
+        .category-links li {
+            margin-bottom: 8px;
+        }
 
-            .category-links a {
-                color: #aaa;
-                text-decoration: none;
-                font-size: 13px;
-                transition: color 0.2s;
-            }
+        .category-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
 
-                .category-links a:hover {
-                    color: #d4af37;
-                }
+        .category-links a:hover {
+            color: #d4af37;
+        }
 
         /* Hero */
         .hero-section {
@@ -196,10 +196,10 @@
             border-radius: 2px;
         }
 
-            .btn-catalog:hover {
-                background-color: #d4af37;
-                color: #000;
-            }
+        .btn-catalog:hover {
+            background-color: #d4af37;
+            color: #000;
+        }
 
         /* Seções de Produtos */
         .section-container {
@@ -218,20 +218,48 @@
             position: relative;
         }
 
-            .section-title::after {
-                content: '';
-                display: block;
-                width: 50px;
-                height: 1px;
-                background: #d4af37;
-                margin: 10px auto 0 auto;
-            }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 1px;
+            background: #d4af37;
+            margin: 10px auto 0 auto;
+        }
 
+        /* Container de Produtos Adaptável (Carrossel no Mobile) */
         .products-grid {
             display: flex;
-            flex-wrap: wrap;
+            gap: 20px;
             justify-content: center;
-            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Regras do Carrossel Exclusivas para Celular */
+        @media (max-width: 767px) {
+            .products-grid {
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                padding-bottom: 15px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .products-grid::-webkit-scrollbar {
+                display: none; /* Esconde a barra de rolagem para um visual mais limpo */
+            }
+
+            .products-grid {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .product-card {
+                flex: 0 0 75% !important; /* Mostra 75% do card para indicar que há mais do lado */
+                max-width: 260px;
+                scroll-snap-align: center;
+            }
         }
 
         .product-card {
@@ -245,10 +273,10 @@
             cursor: pointer;
         }
 
-            .product-card:hover {
-                transform: translateY(-5px);
-                border-color: #d4af37;
-            }
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #d4af37;
+        }
 
         .product-img {
             width: 100%;
@@ -336,9 +364,9 @@
             cursor: pointer;
         }
 
-            .modal-close:hover {
-                color: #fff;
-            }
+        .modal-close:hover {
+            color: #fff;
+        }
 
         .modal-img {
             width: 220px;
@@ -389,13 +417,13 @@
             text-align: left;
         }
 
-            .modal-notes p {
-                margin-bottom: 4px;
-            }
+        .modal-notes p {
+            margin-bottom: 4px;
+        }
 
-            .modal-notes strong {
-                color: #d4af37;
-            }
+        .modal-notes strong {
+            color: #d4af37;
+        }
 
         /* Institucional */
         .institutional-section {
