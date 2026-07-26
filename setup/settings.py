@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# Diretorios
+# Diretórios
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # CHAVE DE SEGURANÇA
@@ -47,7 +47,7 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -61,7 +61,7 @@ TEMPLATES = [
     },
 ]
 
-# BANCO DE DADOS (Usa Neon PostgreSQL no Render e SQLite localmente)
+# BANCO DE DADOS (Usa PostgreSQL no Render e SQLite localmente)
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
