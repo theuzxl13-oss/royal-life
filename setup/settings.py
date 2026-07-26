@@ -20,10 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    
-    # Cloudinary para armazenamento de mídia
-    'cloudinary_storage',
     'django.contrib.staticfiles',
+    
+    # Cloudinary para armazenamento de mídia (fotos enviadas)
+    'cloudinary_storage',
     'cloudinary',
     
     # App do projeto
@@ -90,14 +90,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# CONFIGURAÇÃO DO CLOUDINARY (Armazenamento na nuvem)
+# CONFIGURAÇÃO DO CLOUDINARY (Armazenamento de mídia)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
-# Suporte de armazenamento simples e sem erros de compilação de estáticos
+# Suporte de armazenamento para Django
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
@@ -108,6 +108,5 @@ STORAGES = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
