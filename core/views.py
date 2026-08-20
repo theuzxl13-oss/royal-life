@@ -47,6 +47,8 @@ def colecao(request):
 
 # Abaixo disso, a foto provavelmente não tem nada a ver com nenhum perfume do catálogo.
 LIMIAR_MINIMO = 0.5
+# Um resultado só aparece junto com o melhor se a diferença entre os dois for pequena.
+MARGEM_MAXIMA = 0.08
 # Quantos resultados mostrar no máximo.
 MAX_RESULTADOS = 3
 
@@ -71,6 +73,10 @@ def busca_foto(request):
             ]
             pontuados = [item for item in pontuados if item[0] >= LIMIAR_MINIMO]
             pontuados.sort(key=lambda item: item[0], reverse=True)
+
+            if pontuados:
+                melhor_score = pontuados[0][0]
+                pontuados = [item for item in pontuados if melhor_score - item[0] <= MARGEM_MAXIMA]
 
             resultados = [
                 {'perfume': perfume, 'similaridade': round(similaridade * 100)}
