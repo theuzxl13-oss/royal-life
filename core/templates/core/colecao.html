@@ -8,20 +8,114 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
         body { background-color: #000; color: #fff; padding: 40px 20px; }
+        
         .header { text-align: center; margin-bottom: 40px; }
         .header h1 { color: #d4af37; font-family: serif; font-size: 32px; letter-spacing: 2px; }
-        .back-btn { display: inline-block; margin-top: 15px; color: #aaa; text-decoration: none; font-size: 14px; }
+        .back-btn { display: inline-block; margin-top: 15px; color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s; }
         .back-btn:hover { color: #d4af37; }
+
+        /* Grid de Produtos */
         .products-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .product-card { background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px; width: 260px; padding: 20px; text-align: center; }
-        .product-img { width: 100%; height: 220px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; }
-        .product-title { color: #d4af37; font-size: 18px; margin-bottom: 10px; font-family: serif; }
-        .product-info { color: #888; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .product-price { color: #fff; font-size: 16px; font-weight: bold; }
+        
+        /* Card de Perfume */
+        .product-card { 
+            background-color: #0a0a0a; 
+            border: 1px solid #1a1a1a; 
+            border-radius: 8px; 
+            width: 280px; 
+            padding: 20px; 
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+
+        /* Container da Imagem */
+        .img-container {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #111;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .product-img { 
+            max-width: 100%; 
+            max-height: 100%; 
+            object-fit: contain; 
+        }
+
+        .no-img { color: #555; font-size: 13px; font-style: italic; }
+
+        .product-title { color: #d4af37; font-size: 18px; margin-bottom: 8px; font-family: serif; }
+        .product-info { color: #888; font-size: 12px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .product-price { color: #fff; font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+
+        /* Botão Ver Descrição */
+        .btn-desc {
+            background: none;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 16px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s, color 0.3s;
+            width: 100%;
+        }
+        .btn-desc:hover { background-color: #d4af37; color: #000; }
+
         .empty-msg { text-align: center; color: #666; font-size: 16px; margin-top: 50px; }
+
+        /* Modal de Descrição */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background-color: #111;
+            border: 1px solid #d4af37;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #fff; }
+
+        .modal-title { color: #d4af37; font-family: serif; font-size: 22px; margin-bottom: 10px; }
+        .modal-text { color: #ccc; font-size: 14px; line-height: 1.6; white-space: pre-line; }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>COLEÇÃO DE PERFUMES</h1>
         <a href="/" class="back-btn">← Voltar para a Página Inicial</a>
@@ -30,18 +124,53 @@
     <div class="products-grid">
         {% for perfume in perfumes %}
             <div class="product-card">
-                {% if perfume.imagem %}
-                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                {% else %}
-                    <div class="product-img" style="background:#111; display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                {% endif %}
-                <h3 class="product-title">{{ perfume.nome }}</h3>
-                <p class="product-info">{{ perfume.get_marca_display }} | {{ perfume.get_genero_display }}</p>
-                <p class="product-price">R$ {{ perfume.preco }}</p>
+                <div class="img-container">
+                    {% if perfume.imagem %}
+                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                    {% else %}
+                        <span class="no-img">Sem Imagem</span>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3 class="product-title">{{ perfume.nome }}</h3>
+                    <p class="product-info">{{ perfume.get_marca_display }} | {{ perfume.get_genero_display }}</p>
+                    <p class="product-price">R$ {{ perfume.preco }}</p>
+                </div>
+
+                <button class="btn-desc" onclick="openModal('{{ perfume.nome|escapejs }}', '{{ perfume.descricao|default:'Sem descrição disponível.'|escapejs }}')">
+                    VER DESCRIÇÃO
+                </button>
             </div>
         {% empty %}
-            <p class="empty-msg">Nenhum perfume encontrado para essa categoria ainda.</p>
+            <p class="empty-msg">Nenhum perfume encontrado nesta categoria ainda.</p>
         {% endfor %}
     </div>
+
+    <div class="modal-overlay" id="descModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-text" id="modalText"></p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(nome, descricao) {
+            document.getElementById('modalTitle').innerText = nome;
+            document.getElementById('modalText').innerText = descricao;
+            document.getElementById('descModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('descModal').style.display = 'none';
+        }
+
+        function closeModalOnOverlay(e) {
+            if (e.target.id === 'descModal') {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
