@@ -48,7 +48,7 @@ def colecao(request):
 MAX_RESULTADOS = 3
 # Nome do modelo Gemini usado para identificar perfumes. Se a Google descontinuar
 # esse nome no futuro, basta trocar aqui.
-GEMINI_MODEL = 'gemini-3.0-flash'
+GEMINI_MODEL = 'gemini-flash-latest'
 
 
 def _montar_prompt(catalogo):
