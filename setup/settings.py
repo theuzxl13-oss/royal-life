@@ -10,8 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # CHAVE DE SEGURANÇA
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sua-chave-secreta-aqui')
 
-# DEBUG: Desativa em produção se estiver rodando no Render
-DEBUG = True
+# DEBUG: controlado por variável de ambiente (padrão True para não quebrar o comportamento atual)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -97,6 +97,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # CONFIGURAÇÃO E EXTRAÇÃO DO CLOUDINARY
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL', '').strip()
+USE_CLOUDINARY = bool(CLOUDINARY_URL) or bool(os.environ.get('CLOUDINARY_CLOUD_NAME'))
 
 if CLOUDINARY_URL:
     match = re.match(r'cloudinary://([^:]+):([^@]+)@(.+)', CLOUDINARY_URL)
@@ -129,15 +130,23 @@ else:
     )
 
 # Suporte de armazenamento para Django
+# Usa Cloudinary somente se houver credenciais configuradas; caso contrário,
+# guarda as imagens localmente na pasta media/ do próprio servidor.
+_MEDIA_STORAGE_BACKEND = (
+    'cloudinary_storage.storage.MediaCloudinaryStorage'
+    if USE_CLOUDINARY
+    else 'django.core.files.storage.FileSystemStorage'
+)
+
 STORAGES = {
     "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        "BACKEND": _MEDIA_STORAGE_BACKEND,
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = _MEDIA_STORAGE_BACKEND
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
