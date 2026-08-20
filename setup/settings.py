@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# Diretorio base do projeto
+# Diretorios
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # CHAVE DE SEGURANÇA
@@ -14,16 +14,17 @@ DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
 # APPS INSTALADOS
+# Nota: cloudinary_storage DEVE vir antes de django.contrib.staticfiles
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     
-    # Cloudinary para armazenamento de mídia na nuvem
+    # Cloudinary para armazenamento de mídia
     'cloudinary_storage',
+    'django.contrib.staticfiles',
     'cloudinary',
     
     # App do projeto
@@ -41,13 +42,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Configuração das URLs e WSGI com a pasta correta (setup)
 ROOT_URLCONF = 'setup.urls'
 WSGI_APPLICATION = 'setup.wsgi.application'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -83,22 +83,31 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
-# ARQUIVOS ESTÁTICOS (CSS, JS)
+# ARQUIVOS ESTÁTICOS
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# ARQUIVOS DE MÍDIA (Fotos enviadas no Admin)
+# ARQUIVOS DE MÍDIA
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# CONFIGURAÇÃO DO CLOUDINARY (Imagens permanentes na nuvem)
+# CONFIGURAÇÃO DO CLOUDINARY (Armazenamento na nuvem)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
+# Suporte de armazenamento compatível com Django 4.2+ e versões anteriores
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# CONFIGURAÇÃO DE CHAVE PRIMÁRIA
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
