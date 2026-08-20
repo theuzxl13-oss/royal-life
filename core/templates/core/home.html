@@ -589,6 +589,112 @@
                 transform: scale(1.1);
                 color: #FFF;
             }
+
+        /* Revelar ao rolar */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Zoom na imagem do produto */
+        .img-zoom {
+            overflow: hidden;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .img-zoom .product-img {
+            margin-bottom: 0;
+            transition: transform 0.5s ease, opacity 0.4s ease;
+            opacity: 0;
+            background: linear-gradient(90deg, #111 25%, #1a1a1a 37%, #111 63%);
+            background-size: 400% 100%;
+            animation: skeleton 1.4s ease infinite;
+        }
+        .img-zoom .product-img.loaded { opacity: 1; animation: none; background: none; }
+        .product-card:hover .img-zoom .product-img { transform: scale(1.1); }
+
+        @keyframes skeleton {
+            0% { background-position: 100% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        /* Selos NOVO / ESGOTADO */
+        .img-zoom { position: relative; }
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .badge-new { background: #d4af37; color: #000; }
+        .badge-sold { background: rgba(0,0,0,0.85); color: #ff6b6b; border: 1px solid #ff6b6b; }
+        .product-card.sold-out .product-img { opacity: 0.4 !important; }
+
+        /* Brilho e cintilação do herói */
+        .hero-section { position: relative; }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0) 70%);
+            transform: translate(-50%, -50%);
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hero-section > * { position: relative; z-index: 1; }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        .hero-title {
+            background: linear-gradient(100deg, #d4af37 30%, #fff 50%, #d4af37 70%);
+            background-size: 220% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 5s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Ícones institucionais */
+        .info-card-icon svg { width: 30px; height: 30px; fill: #d4af37; }
+
+        /* Botão Voltar ao Topo */
+        .back-to-top {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #0a0a0a;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 900;
+        }
+        .back-to-top.show { opacity: 1; pointer-events: auto; }
+        .back-to-top:hover { background: #d4af37; color: #000; transform: translateY(-3px); }
     </style>
 </head>
 <body>
@@ -652,7 +758,7 @@
     </div>
 
     {% if campanha_ativa %}
-    <div class="section-container" style="margin-top: 40px; border: 1px solid #d4af37; padding: 40px 20px; border-radius: 8px; background: rgba(212, 175, 55, 0.03);">
+    <div class="section-container reveal" style="margin-top: 40px; border: 1px solid #d4af37; padding: 40px 20px; border-radius: 8px; background: rgba(212, 175, 55, 0.03);">
         <h2 class="section-title">{{ campanha_ativa.titulo }}</h2>
         {% if campanha_ativa.subtitulo %}
         <p style="text-align: center; color: #aaa; margin-top: -30px; margin-bottom: 40px; font-size: 14px; letter-spacing: 1px;">
@@ -665,12 +771,17 @@
             <div class="products-grid" id="campanhaGrid">
                 {% for item in campanha_ativa.campanhaperfume_set.all %}
                 {% with perfume=item.perfume %}
-                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                    {% if perfume.imagem %}
-                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                    {% else %}
-                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                    {% endif %}
+                <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
+                    <div class="img-zoom">
+                        {% if perfume.estoque == 0 %}
+                        <span class="badge badge-sold">ESGOTADO</span>
+                        {% endif %}
+                        {% if perfume.imagem %}
+                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
+                        {% else %}
+                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                        {% endif %}
+                    </div>
                     <h3 class="product-name">{{ perfume.nome }}</h3>
                     <p class="product-price">R$ {{ perfume.preco }}</p>
                     <span class="btn-details">VER DETALHES</span>
@@ -685,18 +796,25 @@
     </div>
     {% endif %}
 
-    <div class="section-container">
+    <div class="section-container reveal">
         <h2 class="section-title">LANÇAMENTOS & DESTAQUES</h2>
         <div class="carousel-wrapper">
             <button class="carousel-arrow left" onclick="scrollCarousel('lancamentosGrid', -280)">&#10094;</button>
             <div class="products-grid" id="lancamentosGrid">
                 {% for perfume in lancamentos %}
-                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                    {% if perfume.imagem %}
-                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                    {% else %}
-                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                    {% endif %}
+                <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
+                    <div class="img-zoom">
+                        {% if forloop.counter <= 3 %}
+                        <span class="badge badge-new">NOVO</span>
+                        {% elif perfume.estoque == 0 %}
+                        <span class="badge badge-sold">ESGOTADO</span>
+                        {% endif %}
+                        {% if perfume.imagem %}
+                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
+                        {% else %}
+                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                        {% endif %}
+                    </div>
                     <h3 class="product-name">{{ perfume.nome }}</h3>
                     <p class="product-price">R$ {{ perfume.preco }}</p>
                     <span class="btn-details">VER DETALHES</span>
@@ -734,15 +852,15 @@
     <!-- Seção Institucional -->
     <div class="institutional-section">
         <div class="cards-grid">
-            <div class="info-card">
-                <div class="info-card-icon">👑</div>
+            <div class="info-card reveal">
+                <div class="info-card-icon"><svg viewBox="0 0 24 24"><path d="M2 8l4 3 6-7 6 7 4-3-2 11H4L2 8zm4 13h12v2H6v-2z"/></svg></div>
                 <h3 class="info-card-title">MISSÃO</h3>
                 <p class="info-card-text">Proporcionar experiências únicas através de fragrâncias cuidadosamente selecionadas, oferecendo perfumes árabes e importados que valorizam a personalidade e o estilo de cada cliente.</p>
                 <span class="highlight-quote">Mais do que perfumes, entregamos identidade.</span>
             </div>
 
-            <div class="info-card">
-                <div class="info-card-icon">💎</div>
+            <div class="info-card reveal">
+                <div class="info-card-icon"><svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9l4-6zm.5 2L4 9h5.2l1.6-4H6.5zm5.4 0L10.3 9h3.4l-1.6-4h-.2zm2.7 0l1.6 4H20l-2.5-4h-2.9zM4.7 11l6.1 7.3L6.9 11H4.7zm4.6 0l2.7 6.5L14.7 11H9.3zm6.4 0l-3.9 7.3L19.3 11h-3.6z"/></svg></div>
                 <h3 class="info-card-title">VALORES</h3>
                 <div class="info-card-text">
                     <p>✓ Autenticidade em cada fragrância</p>
@@ -753,8 +871,8 @@
                 </div>
             </div>
 
-            <div class="info-card">
-                <div class="info-card-icon">⚜️</div>
+            <div class="info-card reveal">
+                <div class="info-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2c1 2.5-.5 4-.5 6.5A2.5 2.5 0 0012 11a2.5 2.5 0 00.5-2.5C12.5 6 11 4.5 12 2zM4 9c2 1 2.8 2.7 4.5 3.2A2.5 2.5 0 0011 11a2.5 2.5 0 00-1.3-2.3C7.8 7.7 6.3 7.5 4 9zm16 0c-2.3-1.5-3.8-1.3-5.7-.3A2.5 2.5 0 0013 11a2.5 2.5 0 002.5 1.2C17.2 11.7 18 10 20 9zM12 13a2.5 2.5 0 00-2.5 2.3C7.7 16.3 6 17.8 4 19c2.3 1.5 3.8 1.3 5.7.3A2.5 2.5 0 0012 21a2.5 2.5 0 002.3-1.7c1.9 1 3.4 1.2 5.7-.3-2-1.2-3.7-2.7-5.5-3.7A2.5 2.5 0 0012 13z"/></svg></div>
                 <h3 class="info-card-title">PROPÓSITO</h3>
                 <p class="info-card-text">
                     Ajudar você a encontrar a fragrância que represente quem você é.<br><br>
@@ -770,6 +888,8 @@
     <a href="https://wa.me/5511972860339?text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20da%20Royal%20Life." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
 
     <script>
         const WHATSAPP_NUMBER = "5511972860339";
@@ -794,7 +914,7 @@
             }
         }
 
-        function openModal(nome, marca, preco, desc, img, saida, coracao, fundo) {
+        function openModal(nome, marca, preco, desc, img, saida, coracao, fundo, estoque) {
             document.getElementById('modalTitle').innerText = nome;
             document.getElementById('modalBrand').innerText = marca;
             document.getElementById('modalPrice').innerText = 'R$ ' + preco;
@@ -812,9 +932,22 @@
             document.getElementById('noteCoracao').innerHTML = coracao ? '<strong>Notas de Coração:</strong> ' + coracao : '';
             document.getElementById('noteFundo').innerHTML = fundo ? '<strong>Notas de Fundo:</strong> ' + fundo : '';
 
-            // Monta o link do WhatsApp com o nome do perfume selecionado
-            const mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
-            document.getElementById('modalBuyWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
+            const buyBtn = document.getElementById('modalBuyWhatsapp');
+            if (Number(estoque) === 0) {
+                buyBtn.innerHTML = 'PRODUTO ESGOTADO';
+                buyBtn.removeAttribute('href');
+                buyBtn.style.pointerEvents = 'none';
+                buyBtn.style.background = '#333';
+                buyBtn.style.color = '#888';
+            } else {
+                buyBtn.innerHTML = '<i class="fab fa-whatsapp"></i> COMPRAR VIA WHATSAPP';
+                buyBtn.style.pointerEvents = 'auto';
+                buyBtn.style.background = '';
+                buyBtn.style.color = '';
+                // Monta o link do WhatsApp com o nome do perfume selecionado
+                const mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
+                buyBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
+            }
 
             document.getElementById('productModal').style.display = 'flex';
         }
@@ -828,6 +961,23 @@
         function closeModalDirect() {
             document.getElementById('productModal').style.display = 'none';
         }
+
+        // Efeito de revelar ao rolar a página
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Botão voltar ao topo
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('show', window.scrollY > 400);
+        });
     </script>
 </body>
 </html>
