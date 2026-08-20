@@ -10,8 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # CHAVE DE SEGURANÇA
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sua-chave-secreta-aqui')
 
-# DEBUG: Desativa em produção se houver variável RENDER
-DEBUG = 'RENDER' not in os.environ
+# DEBUG ATIVADO TEMPORARIAMENTE PARA IDENTIFICAR O ERRO
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
