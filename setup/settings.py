@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir arquivos estaticos no Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir arquivos estáticos no Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -37,9 +37,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Nome da pasta principal onde fica o wsgi.py e urls.py principal
-# Se o seu projeto tiver outro nome de pasta principal (ex: setup), altere abaixo:
-ROOT_URLCONF = 'royallife.urls'
+# Configuração das URLs e WSGI com o nome correto da pasta (royal_life)
+ROOT_URLCONF = 'royal_life.urls'
+WSGI_APPLICATION = 'royal_life.wsgi.application'
 
 TEMPLATES = [
     {
@@ -57,9 +57,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'royallife.wsgi.application'
-
-# BANCO DE DADOS (Usa Neon no Render via DATABASE_URL e SQLite no PC)
+# BANCO DE DADOS (Usa Neon PostgreSQL no Render e SQLite localmente)
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
