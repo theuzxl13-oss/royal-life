@@ -42,3 +42,11 @@ class PerfumeGeralAdmin(admin.ModelAdmin):
     list_display = ('nome', 'genero', 'marca', 'preco', 'estoque')
     list_filter = ('genero', 'marca')
     search_fields = ('nome',)
+    from django.contrib import admin
+from .models import Perfume, Campanha
+
+@admin.register(Campanha)
+class CampanhaAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'ativa')
+    list_editable = ('ativa',)
+    filter_horizontal = ('perfumes',) # Facilita selecionar os perfumes na promoção
