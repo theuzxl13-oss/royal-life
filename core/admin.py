@@ -36,4 +36,4 @@ class PerfumeAdmin(admin.ModelAdmin):
 class CampanhaAdmin(SortableAdminBase, admin.ModelAdmin):
     list_display = ('titulo', 'ativa')
     list_editable = ('ativa',)
-    inlines = [CampanhaPerfumeInline]Força remoção da tabela antiga no admin.py
+    inlines = [CampanhaPerfumeInline]
