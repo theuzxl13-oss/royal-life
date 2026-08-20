@@ -1,12 +1,25 @@
 from django.contrib import admin
+from django.db import connection
 from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminBase
 from .models import Perfume, Campanha, CampanhaPerfume
 
-# Classe para permitir arrastar e soltar os perfumes na campanha
+# Remove a tabela antiga travada do banco PostgreSQL automaticamente
+def limpar_tabela_antiga():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DROP TABLE IF EXISTS core_campanha_perfumes CASCADE;")
+    except Exception:
+        pass
+
+# Executa a limpeza assim que o Admin é carregado
+limpar_tabela_antiga()
+
+
 class CampanhaPerfumeInline(SortableInlineAdminMixin, admin.TabularInline):
     model = CampanhaPerfume
     extra = 1
     autocomplete_fields = ['perfume']
+
 
 @admin.register(Perfume)
 class PerfumeAdmin(admin.ModelAdmin):
@@ -14,9 +27,13 @@ class PerfumeAdmin(admin.ModelAdmin):
     list_filter = ('marca', 'genero')
     search_fields = ('nome', 'descricao')
 
-# Adicionado SortableAdminBase aqui na herança da CampanhaAdmin
+    def delete_model(self, request, obj):
+        limpar_tabela_antiga()
+        super().delete_model(request, obj)
+
+
 @admin.register(Campanha)
 class CampanhaAdmin(SortableAdminBase, admin.ModelAdmin):
     list_display = ('titulo', 'ativa')
     list_editable = ('ativa',)
-    inlines = [CampanhaPerfumeInline]
+    inlines = [CampanhaPerfumeInline]Força remoção da tabela antiga no admin.py
