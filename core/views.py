@@ -20,4 +20,9 @@ def colecao(request):
         'genero_selecionado': genero,
         'marca_selecionada': marca,
     }
-    return render(request, 'core/colecao.html', context)
+    
+    # Tenta renderizar sem o prefixo 'core/' para evitar erro de caminho
+    try:
+        return render(request, 'colecao.html', context)
+    except:
+        return render(request, 'core/colecao.html', context)
