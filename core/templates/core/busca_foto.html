@@ -63,6 +63,35 @@
             object-fit: contain;
         }
 
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+            font-size: 11px;
+            letter-spacing: 1px;
+            margin: 18px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #222;
+        }
+
+        .text-search-input {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+        .text-search-input:focus { outline: none; border-color: #d4af37; }
+        .text-search-input::placeholder { color: #666; }
+
         .btn-submit {
             width: 100%;
             background-color: #d4af37;
@@ -173,8 +202,8 @@
 <body>
 
     <div class="header">
-        <h1>BUSCAR PERFUME POR FOTO</h1>
-        <p>Tire uma foto do frasco, rótulo ou caixa (ou envie uma da galeria) e nossa IA identifica o perfume e sugere os mais parecidos do nosso catálogo.</p>
+        <h1>BUSCAR PERFUME</h1>
+        <p>Tire uma foto do frasco, rótulo ou caixa — ou digite o nome de um perfume — e nossa IA identifica e sugere os mais parecidos do nosso catálogo.</p>
         <a href="/" class="back-btn">← Voltar para a Página Inicial</a>
     </div>
 
@@ -187,11 +216,15 @@
 
         <div class="file-input-wrapper">
             <span class="file-input-btn" id="fileLabel">ESCOLHER FOTO</span>
-            <input type="file" name="foto" accept="image/*" required id="fileInput">
+            <input type="file" name="foto" accept="image/*" id="fileInput">
         </div>
 
+        <div class="divider">OU</div>
+
+        <input type="text" name="nome" class="text-search-input" id="nomeInput" placeholder="Digite o nome de um perfume (ex: Sauvage, Bleu de Chanel...)" value="{{ nome_pesquisado }}">
+
         <button type="submit" class="btn-submit" id="submitBtn">BUSCAR PERFUME</button>
-        <div id="loading">Analisando imagem, aguarde alguns segundos...</div>
+        <div id="loading">Analisando, aguarde alguns segundos...</div>
     </form>
 
     {% if erro %}
@@ -199,7 +232,7 @@
     {% endif %}
 
     {% if identificado %}
-    <p class="results-title" style="font-size: 15px; color: #ccc;">Identificamos que essa foto é do perfume: <strong style="color:#d4af37;">{{ identificado }}</strong></p>
+    <p class="results-title" style="font-size: 15px; color: #ccc;">Identificamos: <strong style="color:#d4af37;">{{ identificado }}</strong></p>
     {% endif %}
 
     {% if resultados %}
@@ -262,7 +295,13 @@
             }
         });
 
-        document.getElementById('uploadForm').addEventListener('submit', () => {
+        document.getElementById('uploadForm').addEventListener('submit', (event) => {
+            const nomeInput = document.getElementById('nomeInput');
+            if (!fileInput.files.length && !nomeInput.value.trim()) {
+                event.preventDefault();
+                alert('Envie uma foto ou digite o nome de um perfume para buscar.');
+                return;
+            }
             document.getElementById('submitBtn').disabled = true;
             document.getElementById('submitBtn').textContent = 'ANALISANDO...';
             document.getElementById('loading').style.display = 'block';
