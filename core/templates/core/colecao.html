@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Life - Coleção</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
         body { background-color: #000; color: #fff; padding: 40px 20px; }
@@ -126,9 +127,32 @@
             border-radius: 20px;
             z-index: 2;
         }
+        .badge-left { left: 10px; }
+        .badge-right { right: 10px; }
         .badge-new { background: #d4af37; color: #000; }
-        .badge-sold { background: rgba(0,0,0,0.85); color: #ff6b6b; border: 1px solid #ff6b6b; }
-        .product-card.sold-out .product-img { opacity: 0.4; }
+        .badge-instock { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid #4caf50; }
+        .badge-preorder { background: rgba(212,175,55,0.12); color: #d4af37; border: 1px solid #d4af37; }
+
+        .card-actions { display: flex; flex-direction: column; gap: 8px; }
+
+        .btn-buy {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: #25d366;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+        .btn-buy:hover { background-color: #1ebd56; }
 
         .product-details { margin-bottom: 15px; }
 
@@ -235,12 +259,15 @@
 
     <div class="products-grid" id="productsGrid">
         {% for perfume in perfumes %}
-            <div class="product-card{% if perfume.estoque == 0 %} sold-out{% endif %}" data-genero="{{ perfume.genero }}" data-nome="{{ perfume.nome|lower }}">
+            <div class="product-card" data-genero="{{ perfume.genero }}" data-nome="{{ perfume.nome|lower }}">
                 <div class="img-container">
                     {% if perfume.estoque == 0 %}
-                        <span class="badge badge-sold">ESGOTADO</span>
-                    {% elif forloop.counter <= 3 %}
-                        <span class="badge badge-new">NOVO</span>
+                        <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
+                    {% else %}
+                        <span class="badge badge-left badge-instock">PRONTA ENTREGA</span>
+                    {% endif %}
+                    {% if forloop.counter <= 3 %}
+                        <span class="badge badge-right badge-new">NOVO</span>
                     {% endif %}
                     {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
@@ -255,9 +282,14 @@
                     <p class="product-price">R$ {{ perfume.preco }}</p>
                 </div>
 
-                <button class="btn-desc" onclick="openModal('{{ perfume.nome|escapejs }}', '{{ perfume.descricao|default:'Sem descrição disponível.'|escapejs }}')">
-                    VER DESCRIÇÃO
-                </button>
+                <div class="card-actions">
+                    <button class="btn-desc" onclick="openModal('{{ perfume.nome|escapejs }}', '{{ perfume.descricao|default:'Sem descrição disponível.'|escapejs }}')">
+                        VER DESCRIÇÃO
+                    </button>
+                    <button class="btn-buy" onclick="comprarWhatsapp('{{ perfume.nome|escapejs }}', '{{ perfume.preco }}', {{ perfume.estoque }})">
+                        <i class="fab fa-whatsapp"></i> {% if perfume.estoque == 0 %}ENCOMENDAR{% else %}COMPRAR{% endif %}
+                    </button>
+                </div>
             </div>
         {% empty %}
             <p class="empty-msg">Nenhum perfume encontrado nesta categoria ainda.</p>
@@ -277,6 +309,18 @@
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
 
     <script>
+        const WHATSAPP_NUMBER = "5511972860339";
+
+        function comprarWhatsapp(nome, preco, estoque) {
+            let mensagem;
+            if (Number(estoque) === 0) {
+                mensagem = encodeURIComponent(`Olá! Gostaria de encomendar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life. Sei que está temporariamente sem estoque.`);
+            } else {
+                mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
+            }
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`, '_blank', 'noopener,noreferrer');
+        }
+
         function openModal(nome, descricao) {
             document.getElementById('modalTitle').innerText = nome;
             document.getElementById('modalText').innerText = descricao;

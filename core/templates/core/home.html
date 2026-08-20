@@ -633,9 +633,23 @@
             border-radius: 20px;
             z-index: 2;
         }
+        .badge-left { left: 10px; }
+        .badge-right { right: 10px; }
         .badge-new { background: #d4af37; color: #000; }
-        .badge-sold { background: rgba(0,0,0,0.85); color: #ff6b6b; border: 1px solid #ff6b6b; }
-        .product-card.sold-out .product-img { opacity: 0.4 !important; }
+        .badge-instock { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid #4caf50; }
+        .badge-preorder { background: rgba(212,175,55,0.12); color: #d4af37; border: 1px solid #d4af37; }
+
+        .modal-stock-tag {
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 1px;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        .modal-stock-tag.instock { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid #4caf50; }
+        .modal-stock-tag.preorder { background: rgba(212,175,55,0.12); color: #d4af37; border: 1px solid #d4af37; }
 
         /* Brilho e cintilação do herói */
         .hero-section { position: relative; }
@@ -774,7 +788,9 @@
                 <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
                     <div class="img-zoom">
                         {% if perfume.estoque == 0 %}
-                        <span class="badge badge-sold">ESGOTADO</span>
+                        <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
+                        {% else %}
+                        <span class="badge badge-left badge-instock">PRONTA ENTREGA</span>
                         {% endif %}
                         {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
@@ -805,9 +821,12 @@
                 <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
                     <div class="img-zoom">
                         {% if perfume.estoque == 0 %}
-                        <span class="badge badge-sold">ESGOTADO</span>
-                        {% elif forloop.counter <= 3 %}
-                        <span class="badge badge-new">NOVO</span>
+                        <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
+                        {% else %}
+                        <span class="badge badge-left badge-instock">PRONTA ENTREGA</span>
+                        {% endif %}
+                        {% if forloop.counter <= 3 %}
+                        <span class="badge badge-right badge-new">NOVO</span>
                         {% endif %}
                         {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
@@ -836,6 +855,7 @@
                 <h3 class="modal-title" id="modalTitle"></h3>
                 <div class="modal-brand" id="modalBrand"></div>
                 <div class="modal-price" id="modalPrice"></div>
+                <span class="modal-stock-tag" id="modalStockTag"></span>
                 <p class="modal-desc" id="modalDesc"></p>
                 <div class="modal-notes" id="modalNotes">
                     <p id="noteSaida"></p>
@@ -933,21 +953,20 @@
             document.getElementById('noteFundo').innerHTML = fundo ? '<strong>Notas de Fundo:</strong> ' + fundo : '';
 
             const buyBtn = document.getElementById('modalBuyWhatsapp');
+            const stockTag = document.getElementById('modalStockTag');
+            let mensagem;
             if (Number(estoque) === 0) {
-                buyBtn.innerHTML = 'PRODUTO ESGOTADO';
-                buyBtn.removeAttribute('href');
-                buyBtn.style.pointerEvents = 'none';
-                buyBtn.style.background = '#333';
-                buyBtn.style.color = '#888';
+                stockTag.textContent = 'SOB ENCOMENDA';
+                stockTag.className = 'modal-stock-tag preorder';
+                buyBtn.innerHTML = '<i class="fab fa-whatsapp"></i> ENCOMENDAR VIA WHATSAPP';
+                mensagem = encodeURIComponent(`Olá! Gostaria de encomendar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life. Sei que está temporariamente sem estoque.`);
             } else {
+                stockTag.textContent = 'PRONTA ENTREGA';
+                stockTag.className = 'modal-stock-tag instock';
                 buyBtn.innerHTML = '<i class="fab fa-whatsapp"></i> COMPRAR VIA WHATSAPP';
-                buyBtn.style.pointerEvents = 'auto';
-                buyBtn.style.background = '';
-                buyBtn.style.color = '';
-                // Monta o link do WhatsApp com o nome do perfume selecionado
-                const mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
-                buyBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
+                mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
             }
+            buyBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
 
             document.getElementById('productModal').style.display = 'flex';
         }
