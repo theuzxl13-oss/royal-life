@@ -27,6 +27,9 @@ class Perfume(models.Model):
     notas_coracao = models.CharField(max_length=200, blank=True, null=True)
     notas_fundo = models.CharField(max_length=200, blank=True, null=True)
 
+    class Meta:
+        ordering = ['-id']  # Garante que produtos novos apareçam primeiro no site
+
     def __str__(self):
         return self.nome
 
@@ -35,7 +38,20 @@ class Campanha(models.Model):
     titulo = models.CharField(max_length=100, help_text="Ex: Promoção de Dia dos Pais")
     subtitulo = models.CharField(max_length=200, blank=True, null=True, help_text="Ex: Até 30% OFF em fragrâncias marcantes")
     ativa = models.BooleanField(default=True, help_text="Marque para exibir no site")
-    perfumes = models.ManyToManyField(Perfume, related_name='campanhas', blank=True)
+    # Relação personalizada com suporte a ordenação
+    perfumes = models.ManyToManyField(Perfume, through='CampanhaPerfume', related_name='campanhas', blank=True)
 
     def __str__(self):
         return self.titulo
+
+
+class CampanhaPerfume(models.Model):
+    campanha = models.ForeignKey(Campanha, on_delete=models.CASCADE)
+    perfume = models.ForeignKey(Perfume, on_delete=models.CASCADE)
+    ordem = models.PositiveIntegerField(default=0, db_index=True)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return f"{self.perfume.nome} - {self.campanha.titulo}"

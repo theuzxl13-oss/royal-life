@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     
+    # Ordenação por arrastar e soltar no Admin
+    'adminsortable2',
+    
     # App do projeto
     'core',
 ]

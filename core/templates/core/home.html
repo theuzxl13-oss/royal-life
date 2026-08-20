@@ -610,17 +610,19 @@
         <div class="carousel-wrapper">
             <button class="carousel-arrow left" onclick="scrollCarousel('campanhaGrid', -280)">&#10094;</button>
             <div class="products-grid" id="campanhaGrid">
-                {% for perfume in campanha_ativa.perfumes.all %}
-                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                    {% if perfume.imagem %}
-                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                    {% else %}
-                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                    {% endif %}
-                    <h3 class="product-name">{{ perfume.nome }}</h3>
-                    <p class="product-price">R$ {{ perfume.preco }}</p>
-                    <span class="btn-details">VER DETALHES</span>
-                </div>
+                {% for item in campanha_ativa.campanhaperfume_set.all %}
+                    {% with perfume=item.perfume %}
+                    <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                        {% if perfume.imagem %}
+                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                        {% else %}
+                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                        {% endif %}
+                        <h3 class="product-name">{{ perfume.nome }}</h3>
+                        <p class="product-price">R$ {{ perfume.preco }}</p>
+                        <span class="btn-details">VER DETALHES</span>
+                    </div>
+                    {% endwith %}
                 {% empty %}
                 <p style="color:#666; font-size:14px; text-align:center; width:100%;">Nenhum perfume selecionado para esta promoção.</p>
                 {% endfor %}

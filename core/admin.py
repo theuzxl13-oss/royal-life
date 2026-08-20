@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Perfume, Campanha
+from adminsortable2.admin import SortableInlineAdminMixin
+from .models import Perfume, Campanha, CampanhaPerfume
+
+# Classe para permitir arrastar e soltar os perfumes na campanha
+class CampanhaPerfumeInline(SortableInlineAdminMixin, admin.TabularInline):
+    model = CampanhaPerfume
+    extra = 1
+    autocomplete_fields = ['perfume'] # Facilita a busca de perfumes se tiver muitos
 
 @admin.register(Perfume)
 class PerfumeAdmin(admin.ModelAdmin):
@@ -11,4 +18,4 @@ class PerfumeAdmin(admin.ModelAdmin):
 class CampanhaAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'ativa')
     list_editable = ('ativa',)
-    filter_horizontal = ('perfumes',)
+    inlines = [CampanhaPerfumeInline] # Subsitui o filter_horizontal pela tabela arrastável
