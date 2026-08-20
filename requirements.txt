@@ -7,4 +7,4 @@ whitenoise
 django-cloudinary-storage
 cloudinary
 django-admin-sortable2
-sentence-transformers
+google-generativeai

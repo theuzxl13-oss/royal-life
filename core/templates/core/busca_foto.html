@@ -123,18 +123,6 @@
         }
         .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
 
-        .match-tag {
-            position: absolute;
-            top: -10px;
-            right: 12px;
-            background: #d4af37;
-            color: #000;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
-
         .img-container {
             position: relative;
             width: 100%;
@@ -186,7 +174,7 @@
 
     <div class="header">
         <h1>BUSCAR PERFUME POR FOTO</h1>
-        <p>Tire uma foto do frasco (ou envie uma da galeria) e nossa IA procura o perfume mais parecido no nosso catálogo.</p>
+        <p>Tire uma foto do frasco, rótulo ou caixa (ou envie uma da galeria) e nossa IA identifica o perfume e sugere os mais parecidos do nosso catálogo.</p>
         <a href="/" class="back-btn">← Voltar para a Página Inicial</a>
     </div>
 
@@ -210,13 +198,15 @@
     <div class="msg-erro">{{ erro }}</div>
     {% endif %}
 
+    {% if identificado %}
+    <p class="results-title" style="font-size: 15px; color: #ccc;">Identificamos que essa foto é do perfume: <strong style="color:#d4af37;">{{ identificado }}</strong></p>
+    {% endif %}
+
     {% if resultados %}
-    <h2 class="results-title">RESULTADOS ENCONTRADOS</h2>
+    <h2 class="results-title">{% if identificado %}PARECIDOS NO NOSSO CATÁLOGO{% else %}SUGESTÕES PARA VOCÊ{% endif %}</h2>
     <div class="products-grid">
-        {% for item in resultados %}
-        {% with perfume=item.perfume %}
+        {% for perfume in resultados %}
         <div class="product-card">
-            <span class="match-tag">{{ item.similaridade }}% parecido</span>
             <div class="img-container">
                 <div class="badge-stack">
                     {% if perfume.estoque == 0 %}
@@ -240,9 +230,10 @@
                 </button>
             </div>
         </div>
-        {% endwith %}
         {% endfor %}
     </div>
+    {% elif identificado %}
+    <p style="text-align:center; color:#666; font-size:14px;">Não temos nenhum perfume parecido com esse no catálogo no momento — mas fale com a gente pelo WhatsApp, talvez possamos encomendar!</p>
     {% endif %}
 
     <script>

@@ -45,47 +45,80 @@ def colecao(request):
     return render(request, 'core/colecao.html', context)
 
 
-# Abaixo disso, a foto provavelmente não tem nada a ver com nenhum perfume do catálogo.
-LIMIAR_MINIMO = 0.5
-# Um resultado só aparece junto com o melhor se a diferença entre os dois for pequena.
-MARGEM_MAXIMA = 0.08
-# Quantos resultados mostrar no máximo.
 MAX_RESULTADOS = 3
+# Nome do modelo Gemini usado para identificar perfumes. Se a Google descontinuar
+# esse nome no futuro, basta trocar aqui.
+GEMINI_MODEL = 'gemini-2.0-flash'
+
+
+def _montar_prompt(catalogo):
+    linhas = [
+        f"{p.id} | {p.nome} | Marca: {p.marca.nome} | Genero: {p.get_genero_display()} | "
+        f"Notas: {p.notas_saida or '-'}, {p.notas_coracao or '-'}, {p.notas_fundo or '-'}"
+        for p in catalogo
+    ]
+    return (
+        "Voce e um especialista em perfumes. Analise a foto enviada (frasco, caixa ou rotulo) e "
+        "tente identificar a marca e o nome do perfume, mesmo que ele nao esteja na lista abaixo.\n\n"
+        "Depois, escolha ate 3 perfumes da lista do CATALOGO abaixo que sejam mais parecidos em "
+        "estilo olfativo com o perfume identificado na foto (considere as notas, o genero e o estilo).\n\n"
+        "CATALOGO (formato: ID | Nome | Marca | Genero | Notas):\n"
+        + "\n".join(linhas) +
+        "\n\nResponda ESTRITAMENTE em JSON valido, sem nenhum texto antes ou depois, neste formato:\n"
+        '{"identificado": "marca e nome do perfume identificado na foto, ou null se nao for possivel reconhecer", '
+        '"similares_ids": [lista de ate 3 IDs do catalogo acima, do mais para o menos parecido]}'
+    )
 
 
 def busca_foto(request):
     resultados = []
+    identificado = None
     erro = None
 
     if request.method == 'POST' and request.FILES.get('foto'):
-        try:
-            from PIL import Image
-            from .clip_utils import compute_embedding, cosine_similarity
+        import os
+        api_key = os.environ.get('GEMINI_API_KEY')
 
-            with Image.open(request.FILES['foto']) as img:
-                consulta = compute_embedding(img.convert('RGB'))
+        if not api_key:
+            erro = "A busca por foto ainda não está disponível no momento. Fale com a gente pelo WhatsApp."
+        else:
+            try:
+                import json
+                from PIL import Image
+                import google.generativeai as genai
 
-            candidatos = Perfume.objects.exclude(imagem_embedding__isnull=True).select_related('marca')
+                genai.configure(api_key=api_key)
 
-            pontuados = [
-                (cosine_similarity(consulta, perfume.imagem_embedding), perfume)
-                for perfume in candidatos
-            ]
-            pontuados = [item for item in pontuados if item[0] >= LIMIAR_MINIMO]
-            pontuados.sort(key=lambda item: item[0], reverse=True)
+                with Image.open(request.FILES['foto']) as img:
+                    imagem = img.convert('RGB')
+                    imagem.thumbnail((768, 768))
 
-            if pontuados:
-                melhor_score = pontuados[0][0]
-                pontuados = [item for item in pontuados if melhor_score - item[0] <= MARGEM_MAXIMA]
+                    catalogo = list(Perfume.objects.select_related('marca').all())
+                    prompt = _montar_prompt(catalogo)
 
-            resultados = [
-                {'perfume': perfume, 'similaridade': round(similaridade * 100)}
-                for similaridade, perfume in pontuados[:MAX_RESULTADOS]
-            ]
+                    model = genai.GenerativeModel(GEMINI_MODEL)
+                    resposta = model.generate_content([prompt, imagem])
 
-            if not resultados:
-                erro = "Não encontramos nenhum perfume parecido no nosso catálogo. Tente outra foto ou fale com a gente pelo WhatsApp."
-        except Exception:
-            erro = "Não foi possível processar essa imagem. Tente novamente com outra foto (JPG ou PNG)."
+                texto = resposta.text.strip()
+                if texto.startswith('```'):
+                    texto = texto.strip('`')
+                    if '\n' in texto:
+                        primeira_linha, texto = texto.split('\n', 1)
 
-    return render(request, 'core/busca_foto.html', {'resultados': resultados, 'erro': erro})
+                dados = json.loads(texto)
+                identificado = dados.get('identificado') or None
+
+                perfumes_por_id = {p.id: p for p in catalogo}
+                ids_sugeridos = dados.get('similares_ids') or []
+                resultados = [perfumes_por_id[i] for i in ids_sugeridos if i in perfumes_por_id][:MAX_RESULTADOS]
+
+                if not identificado and not resultados:
+                    erro = "Não conseguimos identificar essa foto. Tente outra imagem ou fale com a gente pelo WhatsApp."
+            except Exception:
+                erro = "Não foi possível processar essa imagem agora. Tente novamente em instantes ou fale com a gente pelo WhatsApp."
+
+    return render(request, 'core/busca_foto.html', {
+        'resultados': resultados,
+        'identificado': identificado,
+        'erro': erro,
+    })
