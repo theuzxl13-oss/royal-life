@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Life - Fragrâncias de Luxo</title>
+    <!-- Ícones do FontAwesome para o símbolo do WhatsApp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -61,9 +63,9 @@
             transition: color 0.3s;
         }
 
-        .nav-links a:hover {
-            color: #d4af37;
-        }
+            .nav-links a:hover {
+                color: #d4af37;
+            }
 
         /* Sidebar / Menu Lateral */
         .sidebar-overlay {
@@ -92,9 +94,9 @@
             overflow-y: auto;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+            .sidebar.active {
+                left: 0;
+            }
 
         .sidebar-close {
             background: none;
@@ -106,9 +108,9 @@
             margin-bottom: 20px;
         }
 
-        .sidebar-close:hover {
-            color: #fff;
-        }
+            .sidebar-close:hover {
+                color: #fff;
+            }
 
         .sidebar-title {
             color: #d4af37;
@@ -136,20 +138,20 @@
             padding-left: 10px;
         }
 
-        .category-links li {
-            margin-bottom: 8px;
-        }
+            .category-links li {
+                margin-bottom: 8px;
+            }
 
-        .category-links a {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
+            .category-links a {
+                color: #aaa;
+                text-decoration: none;
+                font-size: 13px;
+                transition: color 0.2s;
+            }
 
-        .category-links a:hover {
-            color: #d4af37;
-        }
+                .category-links a:hover {
+                    color: #d4af37;
+                }
 
         /* Hero */
         .hero-section {
@@ -196,10 +198,10 @@
             border-radius: 2px;
         }
 
-        .btn-catalog:hover {
-            background-color: #d4af37;
-            color: #000;
-        }
+            .btn-catalog:hover {
+                background-color: #d4af37;
+                color: #000;
+            }
 
         /* Seções de Produtos */
         .section-container {
@@ -218,14 +220,14 @@
             position: relative;
         }
 
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 1px;
-            background: #d4af37;
-            margin: 10px auto 0 auto;
-        }
+            .section-title::after {
+                content: '';
+                display: block;
+                width: 50px;
+                height: 1px;
+                background: #d4af37;
+                margin: 10px auto 0 auto;
+            }
 
         /* Wrapper para o Carrossel e Setas */
         .carousel-wrapper {
@@ -255,20 +257,20 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.8);
         }
 
-        .carousel-arrow:hover {
-            background: #d4af37;
-            color: #000;
-        }
+            .carousel-arrow:hover {
+                background: #d4af37;
+                color: #000;
+            }
 
-        .carousel-arrow.left {
-            left: -15px;
-        }
+            .carousel-arrow.left {
+                left: -15px;
+            }
 
-        .carousel-arrow.right {
-            right: -15px;
-        }
+            .carousel-arrow.right {
+                right: -15px;
+            }
 
-        /* Container dos Produtos (Carrossel no Desktop e Mobile) */
+        /* Container dos Produtos */
         .products-grid {
             display: flex;
             gap: 20px;
@@ -281,20 +283,20 @@
             width: 100%;
         }
 
-        /* Estilização elegante da barra de rolagem no Computador */
-        .products-grid::-webkit-scrollbar {
-            height: 5px;
-        }
+            /* Barra de rolagem customizada */
+            .products-grid::-webkit-scrollbar {
+                height: 5px;
+            }
 
-        .products-grid::-webkit-scrollbar-track {
-            background: #0a0a0a;
-            border-radius: 10px;
-        }
+            .products-grid::-webkit-scrollbar-track {
+                background: #0a0a0a;
+                border-radius: 10px;
+            }
 
-        .products-grid::-webkit-scrollbar-thumb {
-            background: #d4af37;
-            border-radius: 10px;
-        }
+            .products-grid::-webkit-scrollbar-thumb {
+                background: #d4af37;
+                border-radius: 10px;
+            }
 
         /* Cards do Produto */
         .product-card {
@@ -309,10 +311,10 @@
             scroll-snap-align: start;
         }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: #d4af37;
-        }
+            .product-card:hover {
+                transform: translateY(-5px);
+                border-color: #d4af37;
+            }
 
         .product-img {
             width: 100%;
@@ -370,13 +372,13 @@
                 font-size: 16px;
             }
 
-            .carousel-arrow.left {
-                left: -5px;
-            }
+                .carousel-arrow.left {
+                    left: -5px;
+                }
 
-            .carousel-arrow.right {
-                right: -5px;
-            }
+                .carousel-arrow.right {
+                    right: -5px;
+                }
         }
 
         /* Modal */
@@ -426,9 +428,9 @@
             cursor: pointer;
         }
 
-        .modal-close:hover {
-            color: #fff;
-        }
+            .modal-close:hover {
+                color: #fff;
+            }
 
         .modal-img {
             width: 220px;
@@ -477,15 +479,37 @@
             font-size: 12px;
             color: #aaa;
             text-align: left;
+            margin-bottom: 20px;
         }
 
-        .modal-notes p {
-            margin-bottom: 4px;
+            .modal-notes p {
+                margin-bottom: 4px;
+            }
+
+            .modal-notes strong {
+                color: #d4af37;
+            }
+
+        .btn-buy-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #25d366;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
+            transition: background 0.3s ease;
+            width: 100%;
         }
 
-        .modal-notes strong {
-            color: #d4af37;
-        }
+            .btn-buy-whatsapp:hover {
+                background-color: #1ebd56;
+            }
 
         /* Institucional */
         .institutional-section {
@@ -539,6 +563,32 @@
             margin-top: 15px;
             display: block;
         }
+
+        /* Botão Flutuante do WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 28px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+            .whatsapp-float:hover {
+                transform: scale(1.1);
+                color: #FFF;
+            }
     </style>
 </head>
 <body>
@@ -587,7 +637,7 @@
         <div class="nav-links">
             <a href="#">A MARCA</a>
             <a href="/colecao/">COLEÇÃO</a>
-            <a href="#">CONTATO</a>
+            <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Royal%20Life%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer">CONTATO</a>
         </div>
     </div>
 
@@ -611,18 +661,18 @@
             <button class="carousel-arrow left" onclick="scrollCarousel('campanhaGrid', -280)">&#10094;</button>
             <div class="products-grid" id="campanhaGrid">
                 {% for item in campanha_ativa.campanhaperfume_set.all %}
-                    {% with perfume=item.perfume %}
-                    <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                        {% if perfume.imagem %}
-                        <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                        {% else %}
-                        <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                        {% endif %}
-                        <h3 class="product-name">{{ perfume.nome }}</h3>
-                        <p class="product-price">R$ {{ perfume.preco }}</p>
-                        <span class="btn-details">VER DETALHES</span>
-                    </div>
-                    {% endwith %}
+                {% with perfume=item.perfume %}
+                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                    {% if perfume.imagem %}
+                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                    {% else %}
+                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                    {% endif %}
+                    <h3 class="product-name">{{ perfume.nome }}</h3>
+                    <p class="product-price">R$ {{ perfume.preco }}</p>
+                    <span class="btn-details">VER DETALHES</span>
+                </div>
+                {% endwith %}
                 {% empty %}
                 <p style="color:#666; font-size:14px; text-align:center; width:100%;">Nenhum perfume selecionado para esta promoção.</p>
                 {% endfor %}
@@ -656,6 +706,7 @@
         </div>
     </div>
 
+    <!-- Modal de Produto -->
     <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModalDirect()">&times;</button>
@@ -670,10 +721,14 @@
                     <p id="noteCoracao"></p>
                     <p id="noteFundo"></p>
                 </div>
+                <a href="#" id="modalBuyWhatsapp" target="_blank" rel="noopener noreferrer" class="btn-buy-whatsapp">
+                    <i class="fab fa-whatsapp"></i> COMPRAR VIA WHATSAPP
+                </a>
             </div>
         </div>
     </div>
 
+    <!-- Seção Institucional -->
     <div class="institutional-section">
         <div class="cards-grid">
             <div class="info-card">
@@ -708,7 +763,15 @@
         </div>
     </div>
 
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="https://wa.me/5511972860339?text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20da%20Royal%20Life." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
     <script>
+        // Insira o número do seu WhatsApp com DDD aqui (apenas números)
+        const WHATSAPP_NUMBER = "5511972860339";
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -746,6 +809,10 @@
             document.getElementById('noteSaida').innerHTML = saida ? '<strong>Notas de Saída:</strong> ' + saida : '';
             document.getElementById('noteCoracao').innerHTML = coracao ? '<strong>Notas de Coração:</strong> ' + coracao : '';
             document.getElementById('noteFundo').innerHTML = fundo ? '<strong>Notas de Fundo:</strong> ' + fundo : '';
+
+            // Monta o link do WhatsApp com o nome do perfume selecionado
+            const mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
+            document.getElementById('modalBuyWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`;
 
             document.getElementById('productModal').style.display = 'flex';
         }
