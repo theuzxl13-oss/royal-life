@@ -248,7 +248,7 @@
     </div>
 
     <div class="toolbar">
-        <input type="text" class="search-input" id="searchInput" placeholder="Buscar perfume pelo nome...">
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar por perfume ou marca...">
         <div class="filter-pills" id="filterPills">
             <button class="pill active" data-genero="todos">Todos</button>
             <button class="pill" data-genero="masculino">Masculino</button>
@@ -259,7 +259,7 @@
 
     <div class="products-grid" id="productsGrid">
         {% for perfume in perfumes %}
-            <div class="product-card" data-genero="{{ perfume.genero }}" data-nome="{{ perfume.nome|lower }}">
+            <div class="product-card" data-genero="{{ perfume.genero }}" data-nome="{{ perfume.nome|lower }}" data-marca="{{ perfume.marca.nome|lower }}">
                 <div class="img-container">
                     {% if perfume.estoque == 0 %}
                         <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
@@ -349,7 +349,7 @@
             let visiveis = 0;
             cards.forEach(card => {
                 const bateGenero = currentGenero === 'todos' || card.dataset.genero === currentGenero;
-                const bateBusca = !termo || card.dataset.nome.includes(termo);
+                const bateBusca = !termo || card.dataset.nome.includes(termo) || card.dataset.marca.includes(termo);
                 const mostrar = bateGenero && bateBusca;
                 card.classList.toggle('hidden-by-filter', !mostrar);
                 if (mostrar) visiveis++;

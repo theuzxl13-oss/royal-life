@@ -5,23 +5,16 @@ from .models import Perfume, Campanha, Marca
 def home(request):
     # Traz os perfumes cadastrados mais recentes primeiro (máximo 10)
     lancamentos = Perfume.objects.all().order_by('-id')[:10]
-    
+
     # Busca a campanha ativa
     try:
         campanha_ativa = Campanha.objects.filter(ativa=True).first()
     except (ProgrammingError, OperationalError):
         campanha_ativa = None
 
-    # Puxa todas as marcas cadastradas para o menu lateral
-    try:
-        marcas = Marca.objects.all().order_by('nome')
-    except (ProgrammingError, OperationalError):
-        marcas = []
-
     context = {
         'lancamentos': lancamentos,
         'campanha_ativa': campanha_ativa,
-        'marcas': marcas,
     }
     return render(request, 'core/home.html', context)
 
