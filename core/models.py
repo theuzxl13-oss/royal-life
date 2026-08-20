@@ -18,10 +18,10 @@ class Perfume(models.Model):
     genero = models.CharField(max_length=15, choices=GENERO_CHOICES, verbose_name="Gênero")
     marca = models.CharField(max_length=30, choices=MARCA_CHOICES, verbose_name="Marca")
     preco = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preço (R$)")
+    estoque = models.IntegerField(default=0, blank=True, null=True, verbose_name="Estoque")
     descricao = models.TextField(blank=True, null=True, verbose_name="Descrição")
     imagem = models.ImageField(upload_to='perfumes/', blank=True, null=True, verbose_name="Imagem")
 
-    # Campos de notas olfativas como opcionais (blank=True, null=True)
     notas_saida = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Saída")
     notas_coracao = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Coração")
     notas_fundo = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Fundo")
@@ -36,7 +36,6 @@ class Perfume(models.Model):
         return f"{self.nome} - {self.get_marca_display()}"
 
 
-# Modelos organizados por gênero no Admin
 class PerfumeMasculino(Perfume):
     class Meta:
         proxy = True
