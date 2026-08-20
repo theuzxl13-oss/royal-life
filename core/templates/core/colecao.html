@@ -237,10 +237,10 @@
         {% for perfume in perfumes %}
             <div class="product-card{% if perfume.estoque == 0 %} sold-out{% endif %}" data-genero="{{ perfume.genero }}" data-nome="{{ perfume.nome|lower }}">
                 <div class="img-container">
-                    {% if forloop.counter <= 3 %}
-                        <span class="badge badge-new">NOVO</span>
-                    {% elif perfume.estoque == 0 %}
+                    {% if perfume.estoque == 0 %}
                         <span class="badge badge-sold">ESGOTADO</span>
+                    {% elif forloop.counter <= 3 %}
+                        <span class="badge badge-new">NOVO</span>
                     {% endif %}
                     {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">

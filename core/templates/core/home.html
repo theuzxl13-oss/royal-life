@@ -804,10 +804,10 @@
                 {% for perfume in lancamentos %}
                 <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
                     <div class="img-zoom">
-                        {% if forloop.counter <= 3 %}
-                        <span class="badge badge-new">NOVO</span>
-                        {% elif perfume.estoque == 0 %}
+                        {% if perfume.estoque == 0 %}
                         <span class="badge badge-sold">ESGOTADO</span>
+                        {% elif forloop.counter <= 3 %}
+                        <span class="badge badge-new">NOVO</span>
                         {% endif %}
                         {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
