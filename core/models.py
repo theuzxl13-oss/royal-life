@@ -20,6 +20,12 @@ class Perfume(models.Model):
     preco = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preço (R$)")
     descricao = models.TextField(blank=True, null=True, verbose_name="Descrição")
     imagem = models.ImageField(upload_to='perfumes/', blank=True, null=True, verbose_name="Imagem")
+
+    # Campos de notas olfativas como opcionais (blank=True, null=True)
+    notas_saida = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Saída")
+    notas_coracao = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Coração")
+    notas_fundo = models.CharField(max_length=255, blank=True, null=True, verbose_name="Notas de Fundo")
+
     criado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -30,7 +36,7 @@ class Perfume(models.Model):
         return f"{self.nome} - {self.get_marca_display()}"
 
 
-# Modelos organizados por gênero para aparecerem separados no Admin
+# Modelos organizados por gênero no Admin
 class PerfumeMasculino(Perfume):
     class Meta:
         proxy = True
