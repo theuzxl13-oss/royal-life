@@ -36,6 +36,7 @@ class Perfume(models.Model):
 
     descricao = models.TextField("Descrição", blank=True, null=True)
     imagem = models.ImageField("Imagem", upload_to='perfumes/', blank=True, null=True)
+    imagem_embedding = models.JSONField("Impressão Digital da Imagem (IA)", blank=True, null=True, editable=False)
     estoque = models.IntegerField("Estoque", default=0)
     
     # Notas Olfativas
@@ -59,6 +60,18 @@ class Perfume(models.Model):
         if self.preco_custo and self.preco_custo > 0:
             return ((self.preco - self.preco_custo) / self.preco_custo) * 100
         return 100.00 if (self.preco and self.preco > 0) else 0.00
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.imagem:
+            try:
+                from PIL import Image
+                from .clip_utils import compute_embedding
+                with Image.open(self.imagem.path) as img:
+                    embedding = compute_embedding(img.convert('RGB'))
+                Perfume.objects.filter(pk=self.pk).update(imagem_embedding=embedding)
+            except Exception:
+                pass
 
     def __str__(self):
         return self.nome

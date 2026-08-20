@@ -1,0 +1,281 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Life - Buscar por Foto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #000; color: #fff; padding: 40px 20px; }
+
+        .header { text-align: center; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .header h1 { color: #d4af37; font-family: serif; font-size: 30px; letter-spacing: 2px; margin-bottom: 10px; }
+        .header p { color: #aaa; font-size: 14px; line-height: 1.6; }
+        .back-btn { display: inline-block; margin-top: 15px; color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .back-btn:hover { color: #d4af37; }
+
+        /* Área de upload */
+        .upload-box {
+            max-width: 420px;
+            margin: 0 auto 50px auto;
+            background: #0a0a0a;
+            border: 1px dashed #d4af37;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .upload-icon { font-size: 34px; color: #d4af37; margin-bottom: 12px; }
+        .upload-label { color: #ccc; font-size: 13px; margin-bottom: 20px; display: block; }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0; top: 0;
+            opacity: 0;
+            width: 100%; height: 100%;
+            cursor: pointer;
+        }
+        .file-input-btn {
+            display: block;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        #preview {
+            display: none;
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #d4af37;
+            color: #000;
+            border: none;
+            padding: 14px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-submit:hover { background-color: #e8c250; }
+        .btn-submit:disabled { background-color: #555; color: #999; cursor: not-allowed; }
+
+        #loading {
+            display: none;
+            margin-top: 15px;
+            color: #d4af37;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .msg-erro {
+            max-width: 500px;
+            margin: 0 auto 40px auto;
+            text-align: center;
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+            background: rgba(255,107,107,0.08);
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .results-title {
+            text-align: center;
+            color: #d4af37;
+            font-family: serif;
+            font-size: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        /* Grid de resultados */
+        .products-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1200px; margin: 0 auto; }
+
+        .product-card {
+            position: relative;
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            width: 260px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .product-card:hover { transform: translateY(-5px); border-color: #d4af37; }
+
+        .match-tag {
+            position: absolute;
+            top: -10px;
+            right: 12px;
+            background: #d4af37;
+            color: #000;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .img-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #111;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
+        .no-img { color: #555; font-size: 13px; font-style: italic; }
+
+        .badge-stack { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+        .badge { font-size: 10px; letter-spacing: 1px; font-weight: bold; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+        .badge-instock { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid #4caf50; }
+        .badge-preorder { background: rgba(212,175,55,0.12); color: #d4af37; border: 1px solid #d4af37; }
+
+        .product-title { color: #d4af37; font-size: 17px; margin-bottom: 6px; font-family: serif; }
+        .product-info { color: #888; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .product-price { color: #fff; font-size: 17px; font-weight: bold; margin-bottom: 15px; }
+
+        .card-actions { display: flex; flex-direction: column; gap: 8px; }
+
+        .btn-buy {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: #25d366;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            text-decoration: none;
+        }
+        .btn-buy:hover { background-color: #1ebd56; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>BUSCAR PERFUME POR FOTO</h1>
+        <p>Tire uma foto do frasco (ou envie uma da galeria) e nossa IA procura o perfume mais parecido no nosso catálogo.</p>
+        <a href="/" class="back-btn">← Voltar para a Página Inicial</a>
+    </div>
+
+    <form class="upload-box" method="post" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <div class="upload-icon"><i class="fas fa-camera"></i></div>
+        <span class="upload-label">Selecione uma foto do perfume</span>
+
+        <img id="preview" alt="Pré-visualização">
+
+        <div class="file-input-wrapper">
+            <span class="file-input-btn" id="fileLabel">ESCOLHER FOTO</span>
+            <input type="file" name="foto" accept="image/*" required id="fileInput">
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">BUSCAR PERFUME</button>
+        <div id="loading">Analisando imagem, aguarde alguns segundos...</div>
+    </form>
+
+    {% if erro %}
+    <div class="msg-erro">{{ erro }}</div>
+    {% endif %}
+
+    {% if resultados %}
+    <h2 class="results-title">RESULTADOS ENCONTRADOS</h2>
+    <div class="products-grid">
+        {% for item in resultados %}
+        {% with perfume=item.perfume %}
+        <div class="product-card">
+            <span class="match-tag">{{ item.similaridade }}% parecido</span>
+            <div class="img-container">
+                <div class="badge-stack">
+                    {% if perfume.estoque == 0 %}
+                    <span class="badge badge-preorder">SOB ENCOMENDA</span>
+                    {% else %}
+                    <span class="badge badge-instock">PRONTA ENTREGA</span>
+                    {% endif %}
+                </div>
+                {% if perfume.imagem %}
+                <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                {% else %}
+                <span class="no-img">Sem Imagem</span>
+                {% endif %}
+            </div>
+            <h3 class="product-title">{{ perfume.nome }}</h3>
+            <p class="product-info">{{ perfume.marca.nome }} | {{ perfume.get_genero_display }}</p>
+            <p class="product-price">R$ {{ perfume.preco }}</p>
+            <div class="card-actions">
+                <button class="btn-buy" onclick="comprarWhatsapp('{{ perfume.nome|escapejs }}', '{{ perfume.preco }}', {{ perfume.estoque }})">
+                    <i class="fab fa-whatsapp"></i> {% if perfume.estoque == 0 %}ENCOMENDAR{% else %}COMPRAR{% endif %}
+                </button>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <script>
+        const WHATSAPP_NUMBER = "5511972860339";
+
+        function comprarWhatsapp(nome, preco, estoque) {
+            let mensagem;
+            if (Number(estoque) === 0) {
+                mensagem = encodeURIComponent(`Olá! Gostaria de encomendar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life. Sei que está temporariamente sem estoque.`);
+            } else {
+                mensagem = encodeURIComponent(`Olá! Tenho interesse em comprar o perfume *${nome}* (R$ ${preco}) que vi no site da Royal Life.`);
+            }
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${mensagem}`, '_blank', 'noopener,noreferrer');
+        }
+
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const fileLabel = document.getElementById('fileLabel');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+                fileLabel.textContent = file.name;
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', () => {
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = 'ANALISANDO...';
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
