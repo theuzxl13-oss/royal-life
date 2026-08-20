@@ -1,39 +1,49 @@
 from django.contrib import admin
-from .models import Produto
+from .models import Perfume, PerfumeMasculino, PerfumeFeminino, PerfumeUnissex
 
-@admin.register(Produto)
-class ProdutoAdmin(admin.ModelAdmin):
-    # Divisão do formulário de cadastro em blocos/etapas bem organizados
-    fieldsets = (
-        ('1. Informações do Perfume', {
-            'fields': ('nome', 'descricao'),
-            'description': 'Preencha o nome comercial e os detalhes/notas olfativas do perfume.'
-        }),
-        ('2. Categorização (Gênero e Marca)', {
-            'fields': ('genero', 'marca'),
-            'description': 'Defina se é Masculino/Feminino/Unissex e a marca correspondente.'
-        }),
-        ('3. Valor e Imagem', {
-            'fields': ('preco', 'imagem'),
-            'description': 'Informe o preço de venda e escolha a foto principal do perfume.'
-        }),
-    )
-
-    # Exibição na tabela de listagem dos produtos cadastrados
-    list_display = ('nome', 'marca_formatada', 'genero_formatado', 'preco_formatado', 'criado_em')
-    list_filter = ('genero', 'marca')
+# Classe base para reaproveitar a configuração dos campos
+class BasePerfumeAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'marca', 'preco', 'criado_em')
+    list_filter = ('marca',)
     search_fields = ('nome', 'descricao')
-    list_per_page = 25
+    fields = ('nome', 'marca', 'preco', 'descricao', 'imagem')
 
-    # Métodos para formatar a exibição dos campos na tabela
-    @admin.display(description='Gênero')
-    def genero_formatado(self, obj):
-        return obj.get_genero_display()
+# 1. Painel Masculino (Já preenche o gênero como masculino automaticamente)
+@admin.register(PerfumeMasculino)
+class PerfumeMasculinoAdmin(BasePerfumeAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.genero = 'masculino'
+        super().save_model(request, obj, form, change)
 
-    @admin.display(description='Marca')
-    def marca_formatada(self, obj):
-        return obj.get_marca_display()
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(genero='masculino')
 
-    @admin.display(description='Preço')
-    def preco_formatado(self, obj):
-        return f"R$ {obj.preco:.2f}".replace('.', ',')
+
+# 2. Painel Feminino (Já preenche o gênero como feminino automaticamente)
+@admin.register(PerfumeFeminino)
+class PerfumeFemininoAdmin(BasePerfumeAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.genero = 'feminino'
+        super().save_model(request, obj, form, change)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(genero='feminino')
+
+
+# 3. Painel Unissex (Já preenche o gênero como unissex automaticamente)
+@admin.register(PerfumeUnissex)
+class PerfumeUnissexAdmin(BasePerfumeAdmin):
+    def save_model(self, request, obj, form, change):
+        obj.genero = 'unissex'
+        super().save_model(request, obj, form, change)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(genero='unissex')
+
+
+# Registra também o modelo geral de todos os perfumes
+@admin.register(Perfume)
+class PerfumeGeralAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'genero', 'marca', 'preco')
+    list_filter = ('genero', 'marca')
+    search_fields = ('nome',)
