@@ -46,12 +46,14 @@ class Campanha(models.Model):
 
 
 class CampanhaPerfume(models.Model):
-    campanha = models.ForeignKey(Campanha, on_delete=models.CASCADE)
-    perfume = models.ForeignKey(Perfume, on_delete=models.CASCADE)
+    campanha = models.ForeignKey(Campanha, on_delete=models.CASCADE, related_name='campanhaperfume_set')
+    perfume = models.ForeignKey(Perfume, on_delete=models.CASCADE, related_name='campanha_perfumes')
     ordem = models.PositiveIntegerField(default=0, db_index=True)
 
     class Meta:
         ordering = ['ordem']
 
     def __str__(self):
-        return f"{self.perfume.nome} - {self.campanha.titulo}"
+        nome_perfume = self.perfume.nome if self.perfume else "Sem Perfume"
+        titulo_campanha = self.campanha.titulo if self.campanha else "Sem Campanha"
+        return f"{nome_perfume} - {titulo_campanha}"
