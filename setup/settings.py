@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 import dj_database_url
-import cloudinary
 
 # Diretórios
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,20 +90,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# CONFIGURAÇÃO DO CLOUDINARY
+# CONFIGURAÇÃO DO CLOUDINARY (Lê CLOUDINARY_URL automaticamente)
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL'),
 }
-
-# Inicialização do SDK do Cloudinary
-cloudinary.config(
-    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key=os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
-    secure=True
-)
 
 # Suporte de armazenamento para Django
 STORAGES = {
