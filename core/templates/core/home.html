@@ -227,50 +227,86 @@
             margin: 10px auto 0 auto;
         }
 
-        /* Container de Produtos Adaptável (Carrossel no Mobile) */
+        /* Wrapper para o Carrossel e Setas */
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Setas de Navegação */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 10, 10, 0.85);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .carousel-arrow:hover {
+            background: #d4af37;
+            color: #000;
+        }
+
+        .carousel-arrow.left {
+            left: -15px;
+        }
+
+        .carousel-arrow.right {
+            right: -15px;
+        }
+
+        /* Container dos Produtos (Carrossel no Desktop e Mobile) */
         .products-grid {
             display: flex;
             gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 10px 5px 20px 5px;
+            scroll-behavior: smooth;
+            width: 100%;
         }
 
-        /* Regras do Carrossel Exclusivas para Celular */
-        @media (max-width: 767px) {
-            .products-grid {
-                justify-content: flex-start;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                padding-bottom: 15px;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .products-grid::-webkit-scrollbar {
-                display: none; /* Esconde a barra de rolagem para um visual mais limpo */
-            }
-
-            .products-grid {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-
-            .product-card {
-                flex: 0 0 75% !important; /* Mostra 75% do card para indicar que há mais do lado */
-                max-width: 260px;
-                scroll-snap-align: center;
-            }
+        /* Estilização elegante da barra de rolagem no Computador */
+        .products-grid::-webkit-scrollbar {
+            height: 5px;
         }
 
+        .products-grid::-webkit-scrollbar-track {
+            background: #0a0a0a;
+            border-radius: 10px;
+        }
+
+        .products-grid::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 10px;
+        }
+
+        /* Cards do Produto */
         .product-card {
             background-color: #0a0a0a;
             border: 1px solid #1a1a1a;
             border-radius: 8px;
-            width: 250px;
+            flex: 0 0 240px;
             padding: 20px;
             text-align: center;
             transition: transform 0.3s, border-color 0.3s;
             cursor: pointer;
+            scroll-snap-align: start;
         }
 
         .product-card:hover {
@@ -315,6 +351,32 @@
         .product-card:hover .btn-details {
             border-color: #d4af37;
             color: #d4af37;
+        }
+
+        /* Ajustes no Celular */
+        @media (max-width: 767px) {
+            .product-card {
+                flex: 0 0 75% !important;
+                max-width: 260px;
+            }
+
+            .products-grid::-webkit-scrollbar {
+                display: none;
+            }
+
+            .carousel-arrow {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .carousel-arrow.left {
+                left: -5px;
+            }
+
+            .carousel-arrow.right {
+                right: -5px;
+            }
         }
 
         /* Modal */
@@ -545,42 +607,50 @@
         </p>
         {% endif %}
 
-        <div class="products-grid">
-            {% for perfume in campanha_ativa.perfumes.all %}
-            <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                {% if perfume.imagem %}
-                <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                {% else %}
-                <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                {% endif %}
-                <h3 class="product-name">{{ perfume.nome }}</h3>
-                <p class="product-price">R$ {{ perfume.preco }}</p>
-                <span class="btn-details">VER DETALHES</span>
+        <div class="carousel-wrapper">
+            <button class="carousel-arrow left" onclick="scrollCarousel('campanhaGrid', -280)">&#10094;</button>
+            <div class="products-grid" id="campanhaGrid">
+                {% for perfume in campanha_ativa.perfumes.all %}
+                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                    {% if perfume.imagem %}
+                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                    {% else %}
+                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                    {% endif %}
+                    <h3 class="product-name">{{ perfume.nome }}</h3>
+                    <p class="product-price">R$ {{ perfume.preco }}</p>
+                    <span class="btn-details">VER DETALHES</span>
+                </div>
+                {% empty %}
+                <p style="color:#666; font-size:14px; text-align:center; width:100%;">Nenhum perfume selecionado para esta promoção.</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p style="color:#666; font-size:14px; text-align:center; width:100%;">Nenhum perfume selecionado para esta promoção.</p>
-            {% endfor %}
+            <button class="carousel-arrow right" onclick="scrollCarousel('campanhaGrid', 280)">&#10095;</button>
         </div>
     </div>
     {% endif %}
 
     <div class="section-container">
         <h2 class="section-title">LANÇAMENTOS & DESTAQUES</h2>
-        <div class="products-grid">
-            {% for perfume in lancamentos %}
-            <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
-                {% if perfume.imagem %}
-                <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
-                {% else %}
-                <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
-                {% endif %}
-                <h3 class="product-name">{{ perfume.nome }}</h3>
-                <p class="product-price">R$ {{ perfume.preco }}</p>
-                <span class="btn-details">VER DETALHES</span>
+        <div class="carousel-wrapper">
+            <button class="carousel-arrow left" onclick="scrollCarousel('lancamentosGrid', -280)">&#10094;</button>
+            <div class="products-grid" id="lancamentosGrid">
+                {% for perfume in lancamentos %}
+                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                    {% if perfume.imagem %}
+                    <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
+                    {% else %}
+                    <div class="product-img" style="display:flex; align-items:center; justify-content:center; color:#444;">Sem foto</div>
+                    {% endif %}
+                    <h3 class="product-name">{{ perfume.nome }}</h3>
+                    <p class="product-price">R$ {{ perfume.preco }}</p>
+                    <span class="btn-details">VER DETALHES</span>
+                </div>
+                {% empty %}
+                <p style="color:#666; font-size:14px;">Nenhum lançamento cadastrado no momento.</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p style="color:#666; font-size:14px;">Nenhum lançamento cadastrado no momento.</p>
-            {% endfor %}
+            <button class="carousel-arrow right" onclick="scrollCarousel('lancamentosGrid', 280)">&#10095;</button>
         </div>
     </div>
 
@@ -646,6 +716,14 @@
             } else {
                 sidebar.classList.add('active');
                 overlay.style.display = 'block';
+            }
+        }
+
+        /* Função de Rolagem pelas Setas */
+        function scrollCarousel(gridId, distance) {
+            const grid = document.getElementById(gridId);
+            if (grid) {
+                grid.scrollBy({ left: distance, behavior: 'smooth' });
             }
         }
 
