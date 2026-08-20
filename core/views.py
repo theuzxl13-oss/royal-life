@@ -45,9 +45,10 @@ def colecao(request):
     return render(request, 'core/colecao.html', context)
 
 
-# Limiar mínimo de parecença para considerar uma foto como "compatível".
-# 1.0 = idêntica, valores acima de ~0.75 costumam indicar o mesmo produto.
-LIMIAR_SIMILARIDADE = 0.75
+# Abaixo disso, a foto provavelmente não tem nada a ver com nenhum perfume do catálogo.
+LIMIAR_MINIMO = 0.5
+# Quantos resultados mostrar no máximo.
+MAX_RESULTADOS = 3
 
 
 def busca_foto(request):
@@ -64,17 +65,16 @@ def busca_foto(request):
 
             candidatos = Perfume.objects.exclude(imagem_embedding__isnull=True).select_related('marca')
 
-            pontuados = []
-            for perfume in candidatos:
-                similaridade = cosine_similarity(consulta, perfume.imagem_embedding)
-                if similaridade >= LIMIAR_SIMILARIDADE:
-                    pontuados.append((similaridade, perfume))
-
+            pontuados = [
+                (cosine_similarity(consulta, perfume.imagem_embedding), perfume)
+                for perfume in candidatos
+            ]
+            pontuados = [item for item in pontuados if item[0] >= LIMIAR_MINIMO]
             pontuados.sort(key=lambda item: item[0], reverse=True)
 
             resultados = [
                 {'perfume': perfume, 'similaridade': round(similaridade * 100)}
-                for similaridade, perfume in pontuados[:5]
+                for similaridade, perfume in pontuados[:MAX_RESULTADOS]
             ]
 
             if not resultados:
