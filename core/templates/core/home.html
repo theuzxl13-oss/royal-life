@@ -645,21 +645,26 @@
             100% { background-position: 0 0; }
         }
 
-        /* Selos NOVO / ESGOTADO */
+        /* Selos NOVO / PRONTA ENTREGA / SOB ENCOMENDA */
         .img-zoom { position: relative; }
-        .badge {
+        .badge-stack {
             position: absolute;
             top: 10px;
             left: 10px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .badge {
             font-size: 10px;
             letter-spacing: 1px;
             font-weight: bold;
             padding: 4px 10px;
             border-radius: 20px;
-            z-index: 2;
+            white-space: nowrap;
         }
-        .badge-left { left: 10px; }
-        .badge-right { right: 10px; }
         .badge-new { background: #d4af37; color: #000; }
         .badge-instock { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid #4caf50; }
         .badge-preorder { background: rgba(212,175,55,0.12); color: #d4af37; border: 1px solid #d4af37; }
@@ -786,11 +791,13 @@
                 {% with perfume=item.perfume %}
                 <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
                     <div class="img-zoom">
-                        {% if perfume.estoque == 0 %}
-                        <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
-                        {% else %}
-                        <span class="badge badge-left badge-instock">PRONTA ENTREGA</span>
-                        {% endif %}
+                        <div class="badge-stack">
+                            {% if perfume.estoque == 0 %}
+                            <span class="badge badge-preorder">SOB ENCOMENDA</span>
+                            {% else %}
+                            <span class="badge badge-instock">PRONTA ENTREGA</span>
+                            {% endif %}
+                        </div>
                         {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
                         {% else %}
@@ -819,14 +826,16 @@
                 {% for perfume in lancamentos %}
                 <div class="product-card reveal{% if perfume.estoque == 0 %} sold-out{% endif %}" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}', {{ perfume.estoque }})">
                     <div class="img-zoom">
-                        {% if perfume.estoque == 0 %}
-                        <span class="badge badge-left badge-preorder">SOB ENCOMENDA</span>
-                        {% else %}
-                        <span class="badge badge-left badge-instock">PRONTA ENTREGA</span>
-                        {% endif %}
-                        {% if forloop.counter <= 3 %}
-                        <span class="badge badge-right badge-new">NOVO</span>
-                        {% endif %}
+                        <div class="badge-stack">
+                            {% if perfume.estoque == 0 %}
+                            <span class="badge badge-preorder">SOB ENCOMENDA</span>
+                            {% else %}
+                            <span class="badge badge-instock">PRONTA ENTREGA</span>
+                            {% endif %}
+                            {% if forloop.counter <= 3 %}
+                            <span class="badge badge-new">NOVO</span>
+                            {% endif %}
+                        </div>
                         {% if perfume.imagem %}
                         <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img" onload="this.classList.add('loaded')">
                         {% else %}
