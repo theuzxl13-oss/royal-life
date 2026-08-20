@@ -1,0 +1,43 @@
+:root,
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --primary: #d4af37;
+  --secondary: #1a1a1a;
+  --accent: #d4af37;
+  --header-color: #d4af37;
+  --header-branding-color: #d4af37;
+  --header-bg: #000;
+  --header-link-color: #d4af37;
+  --breadcrumbs-fg: #d4af37;
+  --breadcrumbs-link-fg: #d4af37;
+  --breadcrumbs-bg: #1a1a1a;
+  --link-fg: #b8952e;
+  --link-hover-color: #d4af37;
+  --link-selected-fg: #d4af37;
+  --button-bg: #d4af37;
+  --button-fg: #000;
+  --button-hover-bg: #b8952e;
+  --default-button-bg: #1a1a1a;
+  --default-button-hover-bg: #333;
+  --object-tools-bg: #1a1a1a;
+  --object-tools-hover-bg: #333;
+}
+
+#header {
+  border-bottom: 2px solid #d4af37;
+}
+
+#branding h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#branding img {
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+div.breadcrumbs a {
+  color: #d4af37;
+}

@@ -2,6 +2,10 @@ from django.contrib import admin
 from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminBase
 from .models import Marca, Perfume, Campanha, CampanhaPerfume
 
+admin.site.site_header = "Royal Life"
+admin.site.site_title = "Royal Life Admin"
+admin.site.index_title = "Painel de Administração"
+
 
 @admin.register(Marca)
 class MarcaAdmin(admin.ModelAdmin):
