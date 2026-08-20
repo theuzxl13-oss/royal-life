@@ -601,30 +601,33 @@
         <div class="category-group">
             <div class="category-title">MASCULINO</div>
             <ul class="category-links">
-                <li><a href="/colecao/?genero=masculino&marca=lattafa">Lattafa</a></li>
-                <li><a href="/colecao/?genero=masculino&marca=armaf">Armaf</a></li>
-                <li><a href="/colecao/?genero=masculino&marca=afnan">Afnan</a></li>
-                <li><a href="/colecao/?genero=masculino&marca=maison-alhambra">Maison Alhambra</a></li>
+                {% for marca in marcas %}
+                <li><a href="/colecao/?genero=masculino&marca={{ marca.slug }}">{{ marca.nome }}</a></li>
+                {% empty %}
+                <li><a href="#">Nenhuma marca</a></li>
+                {% endfor %}
             </ul>
         </div>
 
         <div class="category-group">
             <div class="category-title">FEMININO</div>
             <ul class="category-links">
-                <li><a href="/colecao/?genero=feminino&marca=lattafa">Lattafa</a></li>
-                <li><a href="/colecao/?genero=feminino&marca=armaf">Armaf</a></li>
-                <li><a href="/colecao/?genero=feminino&marca=afnan">Afnan</a></li>
-                <li><a href="/colecao/?genero=feminino&marca=maison-alhambra">Maison Alhambra</a></li>
+                {% for marca in marcas %}
+                <li><a href="/colecao/?genero=feminino&marca={{ marca.slug }}">{{ marca.nome }}</a></li>
+                {% empty %}
+                <li><a href="#">Nenhuma marca</a></li>
+                {% endfor %}
             </ul>
         </div>
 
         <div class="category-group">
             <div class="category-title">UNISSEX</div>
             <ul class="category-links">
-                <li><a href="/colecao/?genero=unissex&marca=lattafa">Lattafa</a></li>
-                <li><a href="/colecao/?genero=unissex&marca=armaf">Armaf</a></li>
-                <li><a href="/colecao/?genero=unissex&marca=afnan">Afnan</a></li>
-                <li><a href="/colecao/?genero=unissex&marca=maison-alhambra">Maison Alhambra</a></li>
+                {% for marca in marcas %}
+                <li><a href="/colecao/?genero=unissex&marca={{ marca.slug }}">{{ marca.nome }}</a></li>
+                {% empty %}
+                <li><a href="#">Nenhuma marca</a></li>
+                {% endfor %}
             </ul>
         </div>
     </div>
@@ -637,7 +640,7 @@
         <div class="nav-links">
             <a href="#">A MARCA</a>
             <a href="/colecao/">COLEÇÃO</a>
-            <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Royal%20Life%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer">CONTATO</a>
+            <a href="https://wa.me/5511972860339?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Royal%20Life%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer">CONTATO</a>
         </div>
     </div>
 
@@ -662,7 +665,7 @@
             <div class="products-grid" id="campanhaGrid">
                 {% for item in campanha_ativa.campanhaperfume_set.all %}
                 {% with perfume=item.perfume %}
-                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
                     {% if perfume.imagem %}
                     <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
                     {% else %}
@@ -688,7 +691,7 @@
             <button class="carousel-arrow left" onclick="scrollCarousel('lancamentosGrid', -280)">&#10094;</button>
             <div class="products-grid" id="lancamentosGrid">
                 {% for perfume in lancamentos %}
-                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.get_marca_display }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
+                <div class="product-card" onclick="openModal('{{ perfume.nome }}', '{{ perfume.marca.nome }}', '{{ perfume.preco }}', '{{ perfume.descricao|default:'' }}', '{% if perfume.imagem %}{{ perfume.imagem.url }}{% endif %}', '{{ perfume.notas_saida|default:'' }}', '{{ perfume.notas_coracao|default:'' }}', '{{ perfume.notas_fundo|default:'' }}')">
                     {% if perfume.imagem %}
                     <img src="{{ perfume.imagem.url }}" alt="{{ perfume.nome }}" class="product-img">
                     {% else %}
@@ -769,7 +772,6 @@
     </a>
 
     <script>
-        // Insira o número do seu WhatsApp com DDD aqui (apenas números)
         const WHATSAPP_NUMBER = "5511972860339";
 
         function toggleSidebar() {

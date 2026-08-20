@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db import connection
 from django.db.utils import ProgrammingError, OperationalError
-from .models import Perfume, Campanha
+from .models import Perfume, Campanha, Marca
 
 def criar_tabela_campanhaperfume_se_nao_existir():
     """Garante que a tabela intermediária seja criada diretamente no banco."""
@@ -31,9 +31,16 @@ def home(request):
     except (ProgrammingError, OperationalError):
         campanha_ativa = None
 
+    # Puxa todas as marcas cadastradas para o menu lateral
+    try:
+        marcas = Marca.objects.all().order_by('nome')
+    except (ProgrammingError, OperationalError):
+        marcas = []
+
     context = {
         'lancamentos': lancamentos,
         'campanha_ativa': campanha_ativa,
+        'marcas': marcas,
     }
     return render(request, 'core/home.html', context)
 
@@ -43,16 +50,22 @@ def colecao(request):
     perfumes = Perfume.objects.all().order_by('-id')
     
     genero = request.GET.get('genero')
-    marca = request.GET.get('marca')
+    marca_slug = request.GET.get('marca')
 
     if genero:
         perfumes = perfumes.filter(genero=genero)
-    if marca:
-        perfumes = perfumes.filter(marca=marca)
+    if marca_slug:
+        perfumes = perfumes.filter(marca__slug=marca_slug)
+
+    try:
+        marcas = Marca.objects.all().order_by('nome')
+    except (ProgrammingError, OperationalError):
+        marcas = []
 
     context = {
         'perfumes': perfumes,
+        'marcas': marcas,
         'genero_selecionado': genero,
-        'marca_selecionada': marca,
+        'marca_selecionada': marca_slug,
     }
     return render(request, 'core/colecao.html', context)
