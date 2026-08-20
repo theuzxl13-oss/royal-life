@@ -12,8 +12,13 @@ USERNAME = 'admin'
 EMAIL = 'admin@royallife.com'
 PASSWORD = 'admin'
 
-if not User.objects.filter(username=USERNAME).exists():
-    User.objects.create_superuser(username=USERNAME, email=EMAIL, password=PASSWORD)
+user, created = User.objects.get_or_create(username=USERNAME, defaults={'email': EMAIL})
+user.set_password(PASSWORD)
+user.is_staff = True
+user.is_superuser = True
+user.save()
+
+if created:
     print("Superusuario criado com sucesso!")
 else:
-    print("Superusuario ja existe.")
+    print("Senha do superusuario atualizada com sucesso!")
