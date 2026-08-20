@@ -3,7 +3,8 @@ from .models import Perfume, Campanha
 from django.db.utils import ProgrammingError, OperationalError
 
 def home(request):
-    lancamentos = Perfume.objects.all()[:4]
+    # O .order_by('-id') garante que os últimos perfumes cadastrados venham primeiro
+    lancamentos = Perfume.objects.all().order_by('-id')[:10]
     
     # Busca a campanha. Se a tabela ainda não existir no banco, ignora para não dar erro 500
     try:
@@ -18,7 +19,8 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 def colecao(request):
-    perfumes = Perfume.objects.all()
+    # Ordena do mais recente para o mais antigo na página de coleção também
+    perfumes = Perfume.objects.all().order_by('-id')
     
     genero = request.GET.get('genero')
     marca = request.GET.get('marca')
