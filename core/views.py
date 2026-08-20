@@ -21,8 +21,8 @@ def home(request):
 
 def colecao(request):
     # Ordena do mais recente para o mais antigo na coleção
-    perfumes = Perfume.objects.all().order_by('-id')
-    
+    perfumes = Perfume.objects.select_related('marca').order_by('-id')
+
     genero = request.GET.get('genero')
     marca_slug = request.GET.get('marca')
 
@@ -36,11 +36,23 @@ def colecao(request):
     except (ProgrammingError, OperationalError):
         marcas = []
 
+    ia_identificado = None
+    ia_resultados = []
+    ia_erro = None
+    ia_nome_pesquisado = ''
+
+    if request.method == 'POST':
+        ia_identificado, ia_resultados, ia_erro, ia_nome_pesquisado = _buscar_perfume_ia(request)
+
     context = {
         'perfumes': perfumes,
         'marcas': marcas,
         'genero_selecionado': genero,
         'marca_selecionada': marca_slug,
+        'ia_identificado': ia_identificado,
+        'ia_resultados': ia_resultados,
+        'ia_erro': ia_erro,
+        'ia_nome_pesquisado': ia_nome_pesquisado,
     }
     return render(request, 'core/colecao.html', context)
 
@@ -99,54 +111,49 @@ def _extrair_json(texto_resposta):
     return json.loads(texto)
 
 
-def busca_foto(request):
-    resultados = []
-    identificado = None
-    erro = None
-    nome_pesquisado = ''
+def _buscar_perfume_ia(request):
+    """Processa uma busca por foto ou nome enviada via POST e devolve
+    (identificado, resultados, erro, nome_pesquisado)."""
+    import os
 
-    if request.method == 'POST':
-        import os
-        foto = request.FILES.get('foto')
-        nome_pesquisado = (request.POST.get('nome') or '').strip()
-        api_key = os.environ.get('GEMINI_API_KEY')
+    foto = request.FILES.get('foto')
+    nome_pesquisado = (request.POST.get('nome') or '').strip()
+    api_key = os.environ.get('GEMINI_API_KEY')
 
-        if not api_key:
-            erro = "A busca ainda não está disponível no momento. Fale com a gente pelo WhatsApp."
-        elif not foto and not nome_pesquisado:
-            erro = "Envie uma foto ou digite o nome de um perfume para buscar."
+    if not foto and not nome_pesquisado:
+        return None, [], None, nome_pesquisado
+
+    if not api_key:
+        return None, [], "A busca ainda não está disponível no momento. Fale com a gente pelo WhatsApp.", nome_pesquisado
+
+    try:
+        import google.generativeai as genai
+
+        genai.configure(api_key=api_key)
+        catalogo = list(Perfume.objects.select_related('marca').all())
+        model = genai.GenerativeModel(GEMINI_MODEL)
+
+        if foto:
+            from PIL import Image
+            with Image.open(foto) as img:
+                imagem = img.convert('RGB')
+                imagem.thumbnail((768, 768))
+                resposta = model.generate_content([_prompt_foto(catalogo), imagem])
         else:
-            try:
-                import google.generativeai as genai
+            resposta = model.generate_content(_prompt_nome(nome_pesquisado, catalogo))
 
-                genai.configure(api_key=api_key)
-                catalogo = list(Perfume.objects.select_related('marca').all())
-                model = genai.GenerativeModel(GEMINI_MODEL)
+        dados = _extrair_json(resposta.text)
+        identificado = dados.get('identificado') or None
 
-                if foto:
-                    from PIL import Image
-                    with Image.open(foto) as img:
-                        imagem = img.convert('RGB')
-                        imagem.thumbnail((768, 768))
-                        resposta = model.generate_content([_prompt_foto(catalogo), imagem])
-                else:
-                    resposta = model.generate_content(_prompt_nome(nome_pesquisado, catalogo))
+        perfumes_por_id = {p.id: p for p in catalogo}
+        ids_sugeridos = dados.get('similares_ids') or []
+        resultados = [perfumes_por_id[i] for i in ids_sugeridos if i in perfumes_por_id][:MAX_RESULTADOS]
 
-                dados = _extrair_json(resposta.text)
-                identificado = dados.get('identificado') or None
+        erro = None
+        if not identificado and not resultados:
+            erro = "Não conseguimos identificar isso. Tente outra foto/nome ou fale com a gente pelo WhatsApp."
 
-                perfumes_por_id = {p.id: p for p in catalogo}
-                ids_sugeridos = dados.get('similares_ids') or []
-                resultados = [perfumes_por_id[i] for i in ids_sugeridos if i in perfumes_por_id][:MAX_RESULTADOS]
-
-                if not identificado and not resultados:
-                    erro = "Não conseguimos identificar isso. Tente outra foto/nome ou fale com a gente pelo WhatsApp."
-            except Exception:
-                erro = "Não foi possível processar sua busca agora. Tente novamente em instantes ou fale com a gente pelo WhatsApp."
-
-    return render(request, 'core/busca_foto.html', {
-        'resultados': resultados,
-        'identificado': identificado,
-        'erro': erro,
-        'nome_pesquisado': nome_pesquisado,
-    })
+        return identificado, resultados, erro, nome_pesquisado
+    except Exception:
+        erro = "Não foi possível processar sua busca agora. Tente novamente em instantes ou fale com a gente pelo WhatsApp."
+        return None, [], erro, nome_pesquisado

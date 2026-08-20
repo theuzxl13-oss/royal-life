@@ -9,7 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('colecao/', views.colecao, name='colecao'),
-    path('busca-foto/', views.busca_foto, name='busca_foto'),
 
     # Permite exibir imagens da pasta media no Render
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
