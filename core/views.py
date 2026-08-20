@@ -21,8 +21,4 @@ def colecao(request):
         'marca_selecionada': marca,
     }
     
-    # Tenta renderizar sem o prefixo 'core/' para evitar erro de caminho
-    try:
-        return render(request, 'colecao.html', context)
-    except:
-        return render(request, 'core/colecao.html', context)
+    return render(request, 'core/colecao.html', context)
